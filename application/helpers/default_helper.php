@@ -105,7 +105,9 @@ if (!function_exists('common_status_array')) {
     function common_status_array($validate_by = null)
     {
         $array = array(
-            "account_status" => array('ACTIVE' => 'ACTIVE', 'PENDING' => 'PENING', 'BLOCKED' => 'BLOCKED', 'INACTIVE' => 'INACTIVE'),
+            "account_status" => array('ACTIVE' => 'ACTIVE', 'PENDING' => 'PENDING', 'BLOCKED' => 'BLOCKED', 'INACTIVE' => 'INACTIVE'),
+
+            "gender" => array('FEMALE' => 'Female','MALE' => 'Male','OTHERS' => 'Others')
         );
 
         if ($validate_by) {

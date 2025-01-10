@@ -1,14 +1,14 @@
 <?php
-$course_categories = get_course_categories();
+// $course_categories = get_course_categories();
 ?>
 <div class="card" id="first_screen">
     <div class="d-flex justify-content-between align-items-center pe-4">
-        <h5 class="card-header">Manage Courses</h5>
-        <button type="button" class="btn btn-primary" id="add_course">Add Course</button>
+        <h5 class="card-header">Manage Student</h5>
+        <button type="button" class="btn btn-primary" id="add_course">Add Student</button>
     </div>
     <div class="card-body">
         <div class="table-responsive text-nowrap">
-            <table class="table table-bordered" id="courses_table"></table>
+            <table class="table table-bordered" id="students_table"></table>
         </div>
     </div>
 </div>
@@ -17,9 +17,8 @@ $course_categories = get_course_categories();
 
 <script>
     $(document).ready(function() {
-        const course_categories = <?= json_encode($course_categories) ?>;
 
-        const courses_table = $('#courses_table').DataTable({
+        const students_table = $('#students_table').DataTable({
             ordering: false,
             processing: true,
             order: [],
@@ -36,7 +35,7 @@ $course_categories = get_course_categories();
                 }
             },
             "ajax": {
-                url: "<?= base_url() ?>Courses/get_courses",
+                url: "<?= base_url() ?>Student/get_students",
                 type: "POST",
                 dataSrc: function(json) {
                     if (json.Resp_code == 'RLD') {
@@ -48,18 +47,43 @@ $course_categories = get_course_categories();
                 },
             },
             columns: [{
-                    title: 'Course Name',
+                    title: 'Student Name',
+                    data: 'student_name',
+                    class: 'compact all',
+                },
+                {
+                    title: 'Email',
+                    data: 'email',
+                    class: 'compact all',
+                },
+                {
+                    title: 'Mobile',
+                    data: 'mobile',
+                    class: 'compact all',
+                },
+                {
+                    title: 'Address',
+                    data: 'address',
+                    class: 'compact all',
+                }, 
+                {
+                    title: 'Father Name',
+                    data: 'father_name',
+                    class: 'compact all',
+                }, 
+                {
+                    title: 'Mother Name',
+                    data: 'mother_name',
+                    class: 'compact all',
+                },
+                {
+                    title: 'Course',
                     data: 'course_name',
                     class: 'compact all',
                 },
                 {
-                    title: 'Course Category',
-                    data: 'category_name',
-                    class: 'compact all',
-                },
-                {
-                    title: 'Course Duration',
-                    data: 'course_duration',
+                    title: 'Fees',
+                    data: 'fees',
                     class: 'compact all',
                 },
                 {
@@ -79,7 +103,7 @@ $course_categories = get_course_categories();
             buttons: [{
                     extend: 'csv',
                     className: 'btn btn-info ml-2',
-                    title: 'Account Statement',
+                    title: 'Student Details',
                     exportOptions: {
                         columns: ":not(.ignoreexport)"
                     }
@@ -87,7 +111,7 @@ $course_categories = get_course_categories();
                 {
                     extend: 'excelHtml5',
                     className: 'btn btn-info ml-2',
-                    title: 'Account Statement',
+                    title: 'Student Details',
                     exportOptions: {
                         columns: ":not(.ignoreexport)"
                     }
@@ -96,7 +120,7 @@ $course_categories = get_course_categories();
                 {
                     extend: 'pdfHtml5',
                     className: 'btn btn-info ml-2',
-                    title: 'Account Statement',
+                    title: 'Student Details',
                     exportOptions: {
                         columns: ":not(.ignoreexport)"
                     },
@@ -183,7 +207,7 @@ $course_categories = get_course_categories();
                             if (res.Resp_code === 'RCS') {
                                 toastr.info(res.Resp_desc)
                                 $('#back_to_first_screen').click()
-                                courses_table.ajax.reload()
+                                students_table.ajax.reload()
                             } else if (res.Resp_code === 'RLD') {
                                 window.location.reload();
                             } else {
@@ -196,9 +220,9 @@ $course_categories = get_course_categories();
         });
 
         /* ------------------------------ Edit Course ----------------------------- */
-        courses_table.on('click', '.edit_course', function() {
+        students_table.on('click', '.edit_course', function() {
             const row = $(this).closest('tr');
-            const showtd = courses_table.row(row).data();
+            const showtd = students_table.row(row).data();
 
             let html = `
                 <div class="card-header d-flex justify-content-between align-items-center">
@@ -250,7 +274,7 @@ $course_categories = get_course_categories();
                         if (res.Resp_code === 'RCS') {
                             toastr.info(res.Resp_desc)
                             $('#back_to_first_screen').click()
-                            courses_table.ajax.reload()
+                            students_table.ajax.reload()
                         } else if (res.Resp_code === 'RLD') {
                             window.location.reload();
                         } else {
@@ -266,9 +290,9 @@ $course_categories = get_course_categories();
         })
 
         /* ----------------------------- Delete Course ---------------------------- */
-        courses_table.on('click', '.delete_course', function() {
+        students_table.on('click', '.delete_course', function() {
             const row = $(this).closest('tr');
-            const showtd = courses_table.row(row).data();
+            const showtd = students_table.row(row).data();
 
 
             $.ajax({
@@ -281,7 +305,7 @@ $course_categories = get_course_categories();
                 success: function(res) {
                     if (res.Resp_code === 'RCS') {
                         toastr.info(res.Resp_desc)
-                        courses_table.ajax.reload()
+                        students_table.ajax.reload()
                     } else if (res.Resp_code === 'RLD') {
                         window.location.reload();
                     } else {
