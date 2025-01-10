@@ -213,5 +213,32 @@
 
 
         })
+
+        /* ----------------------------- Delete Content ----------------------------- */
+        content_table.on('click', '.delete_content', function() {
+            const row = $(this).closest('tr');
+            const showtd = content_table.row(row).data();
+
+
+            $.ajax({
+                url: '<?= base_url() ?>Courses/delete_content',
+                method: 'POST',
+                dataType: 'JSON',
+                data: {
+                    content_id: showtd.id
+                },
+                success: function(res) {
+                    if (res.Resp_code === 'RCS') {
+                        toastr.info(res.Resp_desc)
+                        content_table.ajax.reload()
+                    } else if (res.Resp_code === 'RLD') {
+                        window.location.reload();
+                    } else {
+                        toastr.error(res.Resp_desc)
+                    }
+                }
+            })
+
+        })
     })
 </script>

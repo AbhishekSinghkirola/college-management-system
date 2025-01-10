@@ -114,4 +114,11 @@ class Courses_model extends CI_Model
             return $this->db->update('content', $update_array, ['id' => $id]);
         }
     }
+
+    public function delete_content($content_id)
+    {
+        if ($content_id) {
+            return $this->db->delete('content', ['id' => $content_id]);
+        }
+    }
 }
