@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" id="first_screen">
     <div class="d-flex justify-content-between align-items-center pe-4">
         <h5 class="card-header">Manage Courses Content</h5>
         <button type="button" class="btn btn-primary" id="add_course">Add Content</button>
@@ -94,5 +94,65 @@
 
             ]
         })
+
+        /* ------------------------------- Add content ------------------------------ */
+        $('#add_course').click(function(e) {
+
+            let html = `
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Add Content</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-6">
+                        <label class="form-label" for="content_name">Content Name</label>
+                        <input type="text" class="form-control" id="content_name" placeholder="Enter Content Name" autofocus>
+                    </div>
+                    <button type="button" class="btn btn-danger mt-5" id="back_to_first_screen">Back</button>
+                    <button type="button" class="btn btn-primary mt-5" id="save_content">Save</button>
+                </div>
+            `;
+            $('#first_screen').hide();
+            $('#second_screen').html(html).show();
+
+            $('#back_to_first_screen').click(function(e) {
+                $('#first_screen').show();
+                $('#second_screen').html('').hide();
+            });
+
+            /* ------------------------------ Add Content ------------------------------ */
+            $('#save_content').click(function(e) {
+                const params = {
+                    valid: true,
+                    content_name: $('#content_name').val(),
+                }
+
+
+                if (params.content_name === '') {
+                    toastr.error('Enter Content Name');
+                    params.valid = false;
+                    return false;
+                }
+
+                if (params.valid) {
+                    $.ajax({
+                        url: '<?= base_url() ?>Courses/add_content',
+                        method: 'POST',
+                        dataType: 'JSON',
+                        data: params,
+                        success: function(res) {
+                            if (res.Resp_code === 'RCS') {
+                                toastr.info(res.Resp_desc)
+                                $('#back_to_first_screen').click()
+                                content_table.ajax.reload()
+                            } else if (res.Resp_code === 'RLD') {
+                                window.location.reload();
+                            } else {
+                                toastr.error(res.Resp_desc)
+                            }
+                        }
+                    })
+                }
+            })
+        });
     })
 </script>

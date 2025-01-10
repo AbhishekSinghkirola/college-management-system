@@ -366,4 +366,40 @@ class Courses extends CI_Controller
 
 		exit(json_encode($data));
 	}
+
+	public function add_content()
+	{
+		$session = $this->session->userdata('cms_session');
+		if (!$session) {
+			$this->session->sess_destroy();
+
+			exit(json_encode(['Resp_code' => 'RLD', 'Resp_desc' => 'Session Destroyed']));
+		}
+
+		$data = [];
+
+		$params = $this->input->post();
+
+		if (validate_field(@$params['content_name'], 'strname')) {
+
+			$insert_data = [
+				'name' => $params['content_name'],
+			];
+			if ($this->courses_md->add_content($insert_data)) {
+				$data['Resp_code'] = 'RCS';
+				$data['Resp_desc'] = 'Content Added successfully';
+				$data['data'] = [];
+			} else {
+				$data['Resp_code'] = 'ERR';
+				$data['Resp_desc'] = 'Internal Processing Error';
+				$data['data'] = [];
+			}
+		} else {
+			$data['Resp_code'] = 'ERR';
+			$data['Resp_desc'] = 'Invalid Content Name';
+			$data['data'] = [];
+		}
+
+		exit(json_encode($data));
+	}
 }
