@@ -82,4 +82,21 @@ class Courses_model extends CI_Model
             return $this->db->update('courses', $update_array, ['id' => $id]);
         }
     }
+
+    public function get_content($content_id = null)
+    {
+
+        $this->db->from('content');
+
+        if ($content_id) {
+            $this->db->where('id', $content_id);
+            $res = $this->db->get()->row_array();
+        } else {
+            $res = $this->db->get()->result_array();
+        }
+
+        if ($res) {
+            return $res;
+        }
+    }
 }

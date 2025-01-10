@@ -22,19 +22,6 @@ class Courses extends CI_Controller
 	}
 
 
-
-	public function content()
-	{
-		$session = $this->session->userdata('cms_session');
-		if (!$session) {
-			$this->session->sess_destroy();
-			redirect('login');
-		}
-		$this->load->view('template/header');
-		$this->load->view('courses/content');
-		$this->load->view('template/footer');
-	}
-
 	/* -------------------------------------------------------------------------- */
 	/*                                  Category                                  */
 	/* -------------------------------------------------------------------------- */
@@ -341,6 +328,41 @@ class Courses extends CI_Controller
 			$data['Resp_desc'] = 'Invalid Category';
 			$data['data'] = [];
 		}
+
+		exit(json_encode($data));
+	}
+
+	/* -------------------------------------------------------------------------- */
+	/*                                   Content                                  */
+	/* -------------------------------------------------------------------------- */
+
+	public function content()
+	{
+		$session = $this->session->userdata('cms_session');
+		if (!$session) {
+			$this->session->sess_destroy();
+			redirect('login');
+		}
+		$this->load->view('template/header');
+		$this->load->view('courses/content');
+		$this->load->view('template/footer');
+	}
+
+	public function get_content()
+	{
+		$session = $this->session->userdata('cms_session');
+		if (!$session) {
+			$this->session->sess_destroy();
+
+			exit(json_encode(['Resp_code' => 'RLD', 'Resp_desc' => 'Session Destroyed']));
+		}
+
+		$data = [];
+		$content = $this->courses_md->get_content();
+
+		$data['Resp_code'] = 'RCS';
+		$data['Resp_desc'] = 'Content Fetched successfully';
+		$data['data'] = is_array($content) ? $content : [];
 
 		exit(json_encode($data));
 	}
