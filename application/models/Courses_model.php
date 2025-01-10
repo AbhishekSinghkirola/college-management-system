@@ -104,4 +104,14 @@ class Courses_model extends CI_Model
     {
         return $this->db->insert('content', $insert_data);
     }
+
+    public function update_content($update_array)
+    {
+        $id = $update_array['id'];
+
+        if ($id) {
+            unset($update_array['id']);
+            return $this->db->update('content', $update_array, ['id' => $id]);
+        }
+    }
 }

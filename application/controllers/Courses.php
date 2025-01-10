@@ -402,4 +402,51 @@ class Courses extends CI_Controller
 
 		exit(json_encode($data));
 	}
+
+	public function edit_content()
+	{
+		$session = $this->session->userdata('cms_session');
+		if (!$session) {
+			$this->session->sess_destroy();
+
+			exit(json_encode(['Resp_code' => 'RLD', 'Resp_desc' => 'Session Destroyed']));
+		}
+
+		$data = [];
+
+		$params = $this->input->post();
+
+		if (isset($params['content_id']) && ctype_digit($params['content_id'])) {
+
+			$get_content = $this->courses_md->get_content($params['content_id']);
+
+			if (is_array($get_content) && count($get_content)) {
+
+				$update_array = [
+					'name' => $params['content_name'],
+					'id' => $params['content_id']
+				];
+
+				if ($this->courses_md->update_content($update_array)) {
+					$data['Resp_code'] = 'RCS';
+					$data['Resp_desc'] = 'Content Updated Successfully';
+					$data['data'] = [];
+				} else {
+					$data['Resp_code'] = 'ERR';
+					$data['Resp_desc'] = 'Internal Processing Error';
+					$data['data'] = [];
+				}
+			} else {
+				$data['Resp_code'] = 'ERR';
+				$data['Resp_desc'] = 'Content Data Not Found';
+				$data['data'] = [];
+			}
+		} else {
+			$data['Resp_code'] = 'ERR';
+			$data['Resp_desc'] = 'Invalid Content';
+			$data['data'] = [];
+		}
+
+		exit(json_encode($data));
+	}
 }
