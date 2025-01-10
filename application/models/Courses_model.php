@@ -99,4 +99,9 @@ class Courses_model extends CI_Model
             return $res;
         }
     }
+
+    public function add_content($insert_data)
+    {
+        return $this->db->insert('content', $insert_data);
+    }
 }

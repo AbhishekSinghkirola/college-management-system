@@ -110,7 +110,7 @@ $course_categories = get_course_categories();
         })
 
 
-
+        /* ------------------------------- Add Course ------------------------------- */
         $('#add_course').click(function(e) {
 
             let html = `
