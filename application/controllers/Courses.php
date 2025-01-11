@@ -491,4 +491,187 @@ class Courses extends CI_Controller
 
 		exit(json_encode($data));
 	}
+
+	/* -------------------------------------------------------------------------- */
+	/*                          Assign Content To Course                          */
+	/* -------------------------------------------------------------------------- */
+	public function assign_content()
+	{
+		$session = $this->session->userdata('cms_session');
+		if (!$session) {
+			$this->session->sess_destroy();
+			redirect('login');
+		}
+		$this->load->view('template/header');
+		$this->load->view('courses/assign_content');
+		$this->load->view('template/footer');
+	}
+
+	public function get_assigned_content()
+	{
+		$session = $this->session->userdata('cms_session');
+		if (!$session) {
+			$this->session->sess_destroy();
+
+			exit(json_encode(['Resp_code' => 'RLD', 'Resp_desc' => 'Session Destroyed']));
+		}
+
+		$data = [];
+		$content = $this->courses_md->get_assigned_content();
+
+		$data['Resp_code'] = 'RCS';
+		$data['Resp_desc'] = 'Content Fetched successfully';
+		$data['data'] = is_array($content) ? $content : [];
+
+		exit(json_encode($data));
+	}
+
+	public function save_assigned_content()
+	{
+		$session = $this->session->userdata('cms_session');
+		if (!$session) {
+			$this->session->sess_destroy();
+
+			exit(json_encode(['Resp_code' => 'RLD', 'Resp_desc' => 'Session Destroyed']));
+		}
+
+		$data = [];
+
+		$params = $this->input->post();
+
+		if (ctype_digit(@$params['course_name'])) {
+			if (ctype_digit(@$params['content_name'])) {
+
+				$insert_data = [
+					'course_id' => $params['course_name'],
+					'content_id' => $params['content_name'],
+				];
+				if ($this->courses_md->save_assigned_content($insert_data)) {
+					$data['Resp_code'] = 'RCS';
+					$data['Resp_desc'] = 'Content Assigned successfully';
+					$data['data'] = [];
+				} else {
+					$data['Resp_code'] = 'ERR';
+					$data['Resp_desc'] = 'Internal Processing Error';
+					$data['data'] = [];
+				}
+			} else {
+				$data['Resp_code'] = 'ERR';
+				$data['Resp_desc'] = 'Invalid Content Name';
+				$data['data'] = [];
+			}
+		} else {
+			$data['Resp_code'] = 'ERR';
+			$data['Resp_desc'] = 'Invalid Course Name';
+			$data['data'] = [];
+		}
+
+		exit(json_encode($data));
+	}
+
+	public function edit_assigned_content()
+	{
+		$session = $this->session->userdata('cms_session');
+		if (!$session) {
+			$this->session->sess_destroy();
+
+			exit(json_encode(['Resp_code' => 'RLD', 'Resp_desc' => 'Session Destroyed']));
+		}
+
+		$data = [];
+
+		$params = $this->input->post();
+
+		if (isset($params['course_id']) && ctype_digit($params['course_id'])) {
+
+			if (isset($params['content_id']) && ctype_digit($params['content_id'])) {
+
+				$get_course = $this->courses_md->get_content($params['course_id']);
+
+				if (is_array($get_course) && count($get_course)) {
+
+					$get_content = $this->courses_md->get_courses($params['course_id']);
+
+					if (is_array($get_content) && count($get_content)) {
+
+						$update_array = [
+							'course_id' => $params['course_id'],
+							'content_id' => $params['content_id'],
+							'id' => $params['assigned_id']
+						];
+
+						if ($this->courses_md->update_assigned_content($update_array)) {
+							$data['Resp_code'] = 'RCS';
+							$data['Resp_desc'] = 'Assigned Content Edited Successfully';
+							$data['data'] = [];
+						} else {
+							$data['Resp_code'] = 'ERR';
+							$data['Resp_desc'] = 'Internal Processing Error';
+							$data['data'] = [];
+						}
+					} else {
+						$data['Resp_code'] = 'ERR';
+						$data['Resp_desc'] = 'Content Data Not Found';
+						$data['data'] = [];
+					}
+				} else {
+					$data['Resp_code'] = 'ERR';
+					$data['Resp_desc'] = 'Course Data Not Found';
+					$data['data'] = [];
+				}
+			} else {
+				$data['Resp_code'] = 'ERR';
+				$data['Resp_desc'] = 'Invalid Content';
+				$data['data'] = [];
+			}
+		} else {
+			$data['Resp_code'] = 'ERR';
+			$data['Resp_desc'] = 'Invalid Course';
+			$data['data'] = [];
+		}
+
+		exit(json_encode($data));
+	}
+
+	public function delete_assigned_content()
+	{
+		$session = $this->session->userdata('cms_session');
+		if (!$session) {
+			$this->session->sess_destroy();
+
+			exit(json_encode(['Resp_code' => 'RLD', 'Resp_desc' => 'Session Destroyed']));
+		}
+
+		$data = [];
+
+		$params = $this->input->post();
+
+		if (isset($params['assigned_id']) && ctype_digit($params['assigned_id'])) {
+
+			$get_assigned_content = $this->courses_md->get_assigned_content($params['assigned_id']);
+
+			if (is_array($get_assigned_content) && count($get_assigned_content)) {
+
+				if ($this->courses_md->delete_assigend_content($params['assigned_id'])) {
+					$data['Resp_code'] = 'RCS';
+					$data['Resp_desc'] = 'Assigned Content Deleted Successfully';
+					$data['data'] = [];
+				} else {
+					$data['Resp_code'] = 'ERR';
+					$data['Resp_desc'] = 'Internal Processing Error';
+					$data['data'] = [];
+				}
+			} else {
+				$data['Resp_code'] = 'ERR';
+				$data['Resp_desc'] = 'Assigned Content Data Not Found';
+				$data['data'] = [];
+			}
+		} else {
+			$data['Resp_code'] = 'ERR';
+			$data['Resp_desc'] = 'Invalid Assigned Content';
+			$data['data'] = [];
+		}
+
+		exit(json_encode($data));
+	}
 }
