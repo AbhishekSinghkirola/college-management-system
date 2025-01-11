@@ -130,3 +130,26 @@ if (!function_exists(('get_course_categories'))) {
         return $course_categories;
     }
 }
+
+/* ------------------------- Function to get courses ------------------------ */
+if (!function_exists(('get_courses'))) {
+    function get_courses()
+    {
+        $CI = &get_instance();
+
+        $courses = $CI->general_md->get_courses();
+
+        return $courses;
+    }
+}
+
+/* ------------------------- Function to get content ------------------------ */
+if (!function_exists(('get_content'))) {
+    function get_content()
+    {
+        $CI = &get_instance();
+
+        $courses = $CI->general_md->get_content();
+        return $courses;
+    }
+}
