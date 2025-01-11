@@ -1,7 +1,11 @@
+<?php
+$courses = get_courses();
+?>
+
 <div class="card" id="first_screen">
     <div class="d-flex justify-content-between align-items-center pe-4">
         <h5 class="card-header">Manage Student</h5>
-        <button type="button" class="btn btn-primary" id="add_course">Add Student</button>
+        <button type="button" class="btn btn-primary" id="add_student">Add Student</button>
     </div>
     <div class="card-body">
         <div class="table-responsive text-nowrap">
@@ -14,6 +18,7 @@
 
 <script>
     $(document).ready(function() {
+        const courses = <?= json_encode($courses) ?>;
 
         const students_table = $('#students_table').DataTable({
             ordering: false,
@@ -131,30 +136,58 @@
 
 
 
-        $('#add_course').click(function(e) {
+        $('#add_student').click(function(e) {
 
             let html = `
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Add Course</h5>
+                    <h5 class="mb-0">Add Student</h5>
                 </div>
                 <div class="card-body">
+                <div class="row">
+                    <div class="col-6 mb-6">
+                        <label class="form-label" for="student_name">Student Name</label>
+                        <input type="text" class="form-control" id="student_name" placeholder="Enter Student Name" autofocus>
+                    </div>
+                      <div class="col-6 mb-6">
+                        <label class="form-label" for="email">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter Email Address" autofocus>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-6 mb-6">
+                        <label class="form-label" for="mobile">Mobile</label>
+                        <input type="number" class="form-control" id="mobile" placeholder="Enter Student Number" autofocus>
+                    </div>
+
+                    <div class="col-6 mb-6">
+                        <label class="form-label" for="address">Address</label>
+                        <input type="text" class="form-control" id="address" placeholder="Enter Your Address" autofocus>
+                    </div>
+                </div>
+
+                 <div class="row mt-2">
+                    <div class="col-6 mb-6">
+                        <label class="form-label" for="father_name">Father Name</label>
+                        <input type="text" class="form-control" id="father_name" placeholder="Enter Father Name" autofocus>
+                    </div>
+
+                    <div class="col-6 mb-6">
+                        <label class="form-label" for="mother_name">Mother Name</label>
+                        <input type="text" class="form-control" id="mother_name" placeholder="Enter Mother Name" autofocus>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
                     <div class="mb-6">
-                        <label class="form-label" for="category_name">Course Category</label>
-                        <select class="form-control" id="course_category">
-                            <option value="">Select Course Category</option>
-                            ${course_categories.map(cat => `<option value="${cat.category_id}">${cat.category_name}</option>`).join()}
+                        <label class="form-label" for="course_name">Courses</label>
+                        <select class="form-control" id="course_name">
+                            <option value="">Select Course</option>
+                            ${courses.map(courses => `<option value="${courses.id}">${courses.course_name}</option>`).join()}
                         </select>
-                        </div>
-                    <div class="mb-6">
-                        <label class="form-label" for="category_name">Course Name</label>
-                        <input type="text" class="form-control" id="course_name" placeholder="Enter Course Name" autofocus>
                     </div>
-                      <div class="mb-6">
-                        <label class="form-label" for="category_name">Course Duration</label>
-                        <input type="text" class="form-control" id="course_duration" placeholder="Enter Course Duration" autofocus>
-                    </div>
+                </div>
                     <button type="button" class="btn btn-danger mt-5" id="back_to_first_screen">Back</button>
-                    <button type="button" class="btn btn-primary mt-5" id="save_course">Save</button>
+                    <button type="button" class="btn btn-primary mt-5" id="save_student">Save</button>
                 </div>
             `;
             $('#first_screen').hide();
@@ -165,38 +198,65 @@
                 $('#second_screen').html('').hide();
             });
 
-            /* ------------------------------ Add Category ------------------------------ */
-            $('#save_course').click(function(e) {
+            /* ------------------------------ Add Student ------------------------------ */
+            $('#save_student').click(function(e) {
                 const params = {
                     valid: true,
-                    course_category: $('#course_category').val(),
-                    course_name: $('#course_name').val(),
-                    course_duration: $('#course_duration').val()
+                    student_name: $('#student_name').val(),
+                    email: $('#email').val(),
+                    mobile: $('#mobile').val(),
+                    address: $('#address').val(),
+                    father_name: $('#father_name').val(),
+                    mother_name: $('#mother_name').val(),
+                    course_name: $('#course_name').val()
 
                 }
 
-                if (params.course_category === '') {
-                    toastr.error('Enter Course Category');
+                if (params.student_name === '') {
+                    toastr.error('Enter Student Name');
                     params.valid = false;
                     return false;
                 }
 
+
+                if (params.email === '') {
+                    toastr.error('Enter Email Address');
+                    params.valid = false;
+                    return false;
+                }
+
+                if (params.mobile === '') {
+                    toastr.error('Enter Your Mobile');
+                    params.valid = false;
+                    return false;
+                }
+
+                if (params.address === '') {
+                    toastr.error('Enter Your Address');
+                    params.valid = false;
+                    return false;
+                }
+
+                if (params.father_name === '') {
+                    toastr.error('Enter Your Father Name');
+                    params.valid = false;
+                    return false;
+                }
+
+                if (params.mother_name === '') {
+                    toastr.error('Enter Your Mother Name');
+                    params.valid = false;
+                    return false;
+                }
 
                 if (params.course_name === '') {
-                    toastr.error('Enter Course Name');
+                    toastr.error('Select Course');
                     params.valid = false;
                     return false;
                 }
-
-                if (params.course_duration === '') {
-                    toastr.error('Enter Course Duration');
-                    params.valid = false;
-                    return false;
-                }
-
                 if (params.valid) {
                     $.ajax({
-                        url: '<?= base_url() ?>Courses/add_course',
+                        url: '<?= base_url() ?>Student/add_student',
                         method: 'POST',
                         dataType: 'JSON',
                         data: params,
