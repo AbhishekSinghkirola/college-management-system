@@ -1,6 +1,3 @@
-<?php
-// $course_categories = get_course_categories();
-?>
 <div class="card" id="first_screen">
     <div class="d-flex justify-content-between align-items-center pe-4">
         <h5 class="card-header">Manage Student</h5>

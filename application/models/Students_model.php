@@ -11,8 +11,8 @@ class Students_model extends CI_Model
 
     public function get_students($student_id = null)
     {
-        $this->db->from('cms_student');
-        $this->db->join('cms_courses','cms_student.course=cms_courses.id');
+        $this->db->from('student');
+        $this->db->join('courses','student.course=courses.id');
         $this->db->join('category', 'courses.course_category=category.category_id');
 
 

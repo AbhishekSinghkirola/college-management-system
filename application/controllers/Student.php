@@ -35,7 +35,7 @@ class Student extends CI_Controller
 		$students = $this->students_md->get_students();
 
 		$data['Resp_code'] = 'RCS';
-		$data['Resp_desc'] = 'Internal Processing Error';
+		$data['Resp_desc'] = 'Students Fetched Successfully'; 
 		$data['data'] = is_array($students) ? $students : [];
 
 		exit(json_encode($data));
