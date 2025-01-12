@@ -4,9 +4,9 @@ date_default_timezone_set('Asia/Kolkata');
 
 class Students_model extends CI_Model
 {
-    public function add_category($insert_data)
+    public function add_students($insert_data)
     {
-        return $this->db->insert('category', $insert_data);
+        return $this->db->insert('student', $insert_data);
     }
 
     public function get_students($student_id = null)

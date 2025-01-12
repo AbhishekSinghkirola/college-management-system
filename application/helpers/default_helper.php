@@ -155,3 +155,4 @@ if (!function_exists(('get_content'))) {
         return $courses;
     }
 }
+
