@@ -95,8 +95,8 @@ $courses = get_courses();
                     render: function(data, type, full, meta) {
                         return `
                             <div class="d-flex">
-                                <a class="dropdown-item edit_course" style="width:max-content;" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i> Edit</a>
-                                <a class="dropdown-item delete_course" style="width:max-content;" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Delete</a>
+                                <a class="dropdown-item edit_student" style="width:max-content;" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i> Edit</a>
+                                <a class="dropdown-item delete_student" style="width:max-content;" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Delete</a>
                             </div>
                         `;
                     }
@@ -134,7 +134,7 @@ $courses = get_courses();
             ]
         })
 
-
+        /* ---------------------------- Add Student Form ---------------------------- */
 
         $('#add_student').click(function(e) {
 
@@ -198,7 +198,7 @@ $courses = get_courses();
                 $('#second_screen').html('').hide();
             });
 
-            /* ------------------------------ Add Student ------------------------------ */
+            /* ------------------------------ Save Student Data------------------------------ */
             $('#save_student').click(function(e) {
                 const params = {
                     valid: true,
@@ -276,33 +276,61 @@ $courses = get_courses();
             })
         });
 
-        /* ------------------------------ Edit Course ----------------------------- */
-        students_table.on('click', '.edit_course', function() {
+        /* ------------------------------ Edit Student Form ----------------------------- */
+        students_table.on('click', '.edit_student', function() {
             const row = $(this).closest('tr');
             const showtd = students_table.row(row).data();
-
+           
             let html = `
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Edit Course</h5>
+                    <h5 class="mb-0">Edit Student</h5>
                 </div>
                 <div class="card-body">
+                <div class="row">
+                    <div class="col-6 mb-6">
+                        <label class="form-label" for="student_name">Student Name</label>
+                        <input type="text" class="form-control" id="student_name" placeholder="Enter Student Name" value="${showtd.student_name}" autofocus>
+                    </div>
+                      <div class="col-6 mb-6">
+                        <label class="form-label" for="email">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter Email Address" value="${showtd.email}" autofocus>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-6 mb-6">
+                        <label class="form-label" for="mobile">Mobile</label>
+                        <input type="number" class="form-control" id="mobile" placeholder="Enter Student Number" value="${showtd.mobile}" autofocus>
+                    </div>
+
+                    <div class="col-6 mb-6">
+                        <label class="form-label" for="address">Address</label>
+                        <input type="text" class="form-control" id="address" placeholder="Enter Your Address" value="${showtd.address}" autofocus>
+                    </div>
+                </div>
+
+                 <div class="row mt-2">
+                    <div class="col-6 mb-6">
+                        <label class="form-label" for="father_name">Father Name</label>
+                        <input type="text" class="form-control" id="father_name" placeholder="Enter Father Name" value="${showtd.father_name}" autofocus>
+                    </div>
+
+                    <div class="col-6 mb-6">
+                        <label class="form-label" for="mother_name">Mother Name</label>
+                        <input type="text" class="form-control" id="mother_name" placeholder="Enter Mother Name" value="${showtd.mother_name}" autofocus>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
                     <div class="mb-6">
-                        <label class="form-label" for="category_name">Course Category</label>
-                        <select class="form-control" id="course_category">
-                            <option value="">Select Course Category</option>
-                            ${course_categories.map(cat => `<option value="${cat.category_id}" ${cat.category_id == showtd.course_category ? 'selected' : ''}>${cat.category_name}</option>`).join()}
+                        <label class="form-label" for="course_name">Courses</label>
+                        <select class="form-control" id="course_name">
+                            <option value="">Select Course</option>
+                            ${courses.map(courses => `<option value="${courses.id}" ${courses.id == showtd.course ? 'selected' : ''}>${courses.course_name}</option>`).join()}
                         </select>
-                        </div>
-                    <div class="mb-6">
-                        <label class="form-label" for="category_name">Course Name</label>
-                        <input type="text" class="form-control" id="course_name" placeholder="Enter Course Name" value="${showtd.course_name}" autofocus>
                     </div>
-                      <div class="mb-6">
-                        <label class="form-label" for="category_name">Course Duration</label>
-                        <input type="text" class="form-control" id="course_duration" placeholder="Enter Course Duration" value="${showtd.course_duration}" autofocus>
-                    </div>
+                </div>
                     <button type="button" class="btn btn-danger mt-5" id="back_to_first_screen">Back</button>
-                    <button type="button" class="btn btn-primary mt-5" id="edit_course">Save</button>
+                    <button type="button" class="btn btn-primary mt-5" id="edit_student">Save</button>
                 </div>
             `;
             $('#first_screen').hide();
@@ -313,17 +341,24 @@ $courses = get_courses();
                 $('#second_screen').html('').hide();
             });
 
-            $('#edit_course').click(function() {
+            /* ---------------------------- Save Edited Student Data --------------------------- */
+
+            $('#edit_student').click(function() {
                 const params = {
                     valid: true,
-                    course_category: $('#course_category').val(),
-                    course_name: $('#course_name').val(),
-                    course_duration: $('#course_duration').val(),
-                    course_id: showtd.id
+                    student_id: showtd.student_id,
+                    student_name: $('#student_name').val(),
+                    email: $('#email').val(),
+                    mobile: $('#mobile').val(),
+                    address: $('#address').val(),
+                    father_name: $('#father_name').val(),
+                    mother_name: $('#mother_name').val(),
+                    course_id: $('#course_name').val(),
+                     
                 }
 
                 $.ajax({
-                    url: '<?= base_url() ?>Courses/edit_course',
+                    url: '<?= base_url() ?>Student/edit_student',
                     method: 'POST',
                     dataType: 'JSON',
                     data: params,
@@ -346,18 +381,18 @@ $courses = get_courses();
 
         })
 
-        /* ----------------------------- Delete Course ---------------------------- */
-        students_table.on('click', '.delete_course', function() {
+        /* ----------------------------- Delete Student ---------------------------- */
+        students_table.on('click', '.delete_student', function() {
             const row = $(this).closest('tr');
             const showtd = students_table.row(row).data();
 
 
             $.ajax({
-                url: '<?= base_url() ?>Courses/delete_course',
+                url: '<?= base_url() ?>Student/delete_student',
                 method: 'POST',
                 dataType: 'JSON',
                 data: {
-                    course_id: showtd.id
+                    student_id: showtd.student_id
                 },
                 success: function(res) {
                     if (res.Resp_code === 'RCS') {

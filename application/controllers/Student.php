@@ -23,6 +23,7 @@ class Student extends CI_Controller
 		$this->load->view('template/footer');
 	}
 
+	/* ------------------------- Function to Get Student ------------------------ */
 	public function get_students(){
 		$session = $this->session->userdata('cms_session');
 		if(!$session){
@@ -41,6 +42,7 @@ class Student extends CI_Controller
 		exit(json_encode($data));
 	}
 
+	/* -------------------------- Function to Add New Student -------------------------- */
 	public function add_student()
 	{
 		$session = $this->session->userdata('cms_session');
@@ -84,6 +86,105 @@ class Student extends CI_Controller
 		exit(json_encode($data));
 	}
 
+	/* ------------------------ Function to Edit Student ------------------------ */
+	public function edit_student()
+	{
+		$session = $this->session->userdata('cms_session');
+		if (!$session) {
+			$this->session->sess_destroy();
+
+			exit(json_encode(['Resp_code' => 'RLD', 'Resp_desc' => 'Session Destroyed']));
+		}
+
+		$data = [];
+
+		$params = $this->input->post();
+
+		if (isset($params['student_id']) && ctype_digit($params['student_id'])) {
+
+			$get_student = $this->students_md->get_students($params['student_id']);
+
+		//dd($params);
+
+			if (is_array($get_student) && count($get_student)) {
+
+				$update_array = [
+					'student_name' => $params['student_name'],
+					'email' => $params['email'],
+					'mobile' => $params['mobile'],
+					'address' => $params['address'],
+					'father_name' => $params['father_name'],
+					'mother_name' => $params['mother_name'],
+					'course' => $params['course_id'], // update course id on studnet table
+					'student_id' => $params['student_id']
+				];
+
+				if ($this->students_md->update_student($update_array)) {
+					$data['Resp_code'] = 'RCS';
+					$data['Resp_desc'] = 'Student Updated Successfully';
+					$data['data'] = [];
+				} else {
+					$data['Resp_code'] = 'ERR';
+					$data['Resp_desc'] = 'Internal Processing Error';
+					$data['data'] = [];
+				}
+			} else {
+				$data['Resp_code'] = 'ERR';
+				$data['Resp_desc'] = 'Student Data Not Found';
+				$data['data'] = [];
+			}
+		} else {
+			$data['Resp_code'] = 'ERR';
+			$data['Resp_desc'] = 'Invalid Student';
+			$data['data'] = [];
+		}
+
+		exit(json_encode($data));
+	}
+
+	/* ----------------------- Function to Delete Student ----------------------- */
+
+	public function delete_student()
+	{
+		$session = $this->session->userdata('cms_session');
+		if (!$session) {
+			$this->session->sess_destroy();
+
+			exit(json_encode(['Resp_code' => 'RLD', 'Resp_desc' => 'Session Destroyed']));
+		}
+
+		$data = [];
+
+		$params = $this->input->post();
+
+		if (isset($params['student_id']) && ctype_digit($params['student_id'])) {
+
+			$get_student = $this->students_md->get_students($params['student_id']);
+
+			if (is_array($get_student) && count($get_student)) {
+
+				if ($this->students_md->delete_student($params['student_id'])) {
+					$data['Resp_code'] = 'RCS';
+					$data['Resp_desc'] = 'Student Deleted Successfully';
+					$data['data'] = [];
+				} else {
+					$data['Resp_code'] = 'ERR';
+					$data['Resp_desc'] = 'Internal Processing Error';
+					$data['data'] = [];
+				}
+			} else {
+				$data['Resp_code'] = 'ERR';
+				$data['Resp_desc'] = 'Student Data Not Found';
+				$data['data'] = [];
+			}
+		} else {
+			$data['Resp_code'] = 'ERR';
+			$data['Resp_desc'] = 'Invalid Student';
+			$data['data'] = [];
+		}
+
+		exit(json_encode($data));
+	}
 
 	/* ------------- Function To Show Pending Student Registrations ------------- */
 	public function pending_registration()
