@@ -223,6 +223,7 @@ class Courses extends CI_Controller
 				'course_name' => $params['course_name'],
 				'course_category' => $params['course_category'],
 				'course_duration' => $params['course_duration'],
+				'fees' => $params['course_fees'],
 			];
 			if ($this->courses_md->add_course($insert_data)) {
 				$data['Resp_code'] = 'RCS';
@@ -306,6 +307,7 @@ class Courses extends CI_Controller
 					'course_name' => $params['course_name'],
 					'course_category' => $params['course_category'],
 					'course_duration' => $params['course_duration'],
+					'fees' => $params['course_fees'],
 					'id' => $params['course_id']
 				];
 
