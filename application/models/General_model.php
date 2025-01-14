@@ -52,4 +52,27 @@ class General_model extends CI_Model
             return $res;
         }
     }
+
+    public function get_user($user_id, $role_id)
+    {
+        $table = '';
+        if ($role_id == '1') {
+            $table = 'users';
+            $this->db->where($table . '.id', $user_id);
+        } else if ($role_id == '2') {
+            $table = 'teacher';
+            $this->db->where($table . '.teacher_id', $user_id);
+        } else if ($role_id == '3') {
+            $table = 'student';
+            $this->db->where($table . '.student_id', $user_id);
+        }
+
+        if ($table) {
+            $this->db->join('role', $table . '.role_id=role.role_id');
+            $res = $this->db->get($table)->row_array();
+            if ($res) return $res;
+        } else {
+            return false;
+        }
+    }
 }

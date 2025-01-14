@@ -676,4 +676,55 @@ class Courses extends CI_Controller
 
 		exit(json_encode($data));
 	}
+
+	/* -------------------------------------------------------------------------- */
+	/*                               Course Details                               */
+	/* -------------------------------------------------------------------------- */
+
+	public function course_details()
+	{
+		$session = $this->session->userdata('cms_session');
+		if (!$session) {
+			$this->session->sess_destroy();
+			redirect('login');
+		}
+
+		$user = get_logged_in_user();
+
+		if (!$user) {
+			$this->session->sess_destroy();
+			redirect('login');
+		}
+
+		if ($user['role_type'] !== 'USER') {
+			redirect('login');
+		}
+
+		$course_details = $this->courses_md->get_student_course($user['course']);
+
+		$this->load->view('template/header');
+		$this->load->view('courses/course_details', ['user' => $user, 'course_details' => $course_details]);
+		$this->load->view('template/footer');
+	}
+
+	public function get_student_courses_content()
+	{
+		$session = $this->session->userdata('cms_session');
+		if (!$session) {
+			$this->session->sess_destroy();
+
+			exit(json_encode(['Resp_code' => 'RLD', 'Resp_desc' => 'Session Destroyed']));
+		}
+
+		$params = $_POST;
+
+		$data = [];
+		$content = $this->courses_md->get_student_courses_content($params['course_id']);
+
+		$data['Resp_code'] = 'RCS';
+		$data['Resp_desc'] = 'Content Fetched successfully';
+		$data['data'] = is_array($content) ? $content : [];
+
+		exit(json_encode($data));
+	}
 }

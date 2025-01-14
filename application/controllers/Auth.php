@@ -34,12 +34,20 @@ class Auth extends CI_Controller
 				if (validate_field($params['mobile'], 'mob')) {
 
 					if (validate_field($params['password'], 'strpass')) {
-
 						$is_valid_user = $this->auth_md->check_valid_user($params['mobile'], md5($params['password']), $params['role_id']);
+
 						if ($is_valid_user) {
 
+							if ($params['role_id'] == '1') {
+								$user_id = $is_valid_user['user_id'];
+							} else if ($params['role_id'] == '2') {
+								$user_id = $is_valid_user['teacher_id'];
+							} else if ($params['role_id'] == '3') {
+								$user_id = $is_valid_user['student_id'];
+							}
+
 							$session_array = array(
-								"user_id" => $is_valid_user['user_id'],
+								"user_id" => $user_id,
 								"role_id" => $is_valid_user['role_id'],
 							);
 
