@@ -90,11 +90,11 @@ $roles = get_roles(true);
                     </g>
                   </svg>
                 </span>
-                <span class="app-brand-text demo text-body fw-bolder">Sneat</span>
+                <span class="app-brand-text demo text-body fw-bolder text-uppercase">CMS</span>
               </a>
             </div>
             <!-- /Logo -->
-            <h4 class="mb-2">Welcome to Sneat! 👋</h4>
+            <h4 class="mb-2">Welcome to College Management System! 👋</h4>
             <p class="mb-4">Please sign-in to your account and start the adventure</p>
 
             <form id="formAuthentication" class="mb-3" action="#" method="POST">
@@ -110,7 +110,7 @@ $roles = get_roles(true);
               </div>
               <div class="mb-3">
                 <label for="email" class="form-label">Mobile</label>
-                <input type="text" class="form-control" id="mobile" name="email-username" placeholder="Enter your email or username" autofocus />
+                <input type="text" class="form-control" id="mobile" name="email-username" placeholder="Enter your mobile" autofocus />
               </div>
               <div class="mb-3 form-password-toggle">
                 <div class="d-flex justify-content-between">
@@ -128,26 +128,13 @@ $roles = get_roles(true);
                 <button class="btn btn-primary d-grid w-100" type="button" id="init_login">Sign in</button>
               </div>
             </form>
-
-            <p class="text-center">
-              <span>New on our platform?</span>
-              <a href="auth-register-basic.html">
-                <span>Create an account</span>
-              </a>
-            </p>
           </div>
         </div>
-        <!-- /Register -->
       </div>
     </div>
   </div>
 
   <!-- / Content -->
-
-  <div class="buy-now">
-    <a href="https://themeselection.com/products/sneat-bootstrap-html-admin-template/" target="_blank" class="btn btn-danger btn-buy-now">Upgrade to Pro</a>
-  </div>
-
   <!-- Core JS -->
   <!-- build:js assets/vendor/js/core.js -->
   <script src="assets/vendor/libs/jquery/jquery.js"></script>

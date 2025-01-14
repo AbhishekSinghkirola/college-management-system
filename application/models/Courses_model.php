@@ -165,4 +165,28 @@ class Courses_model extends CI_Model
             return $this->db->delete('assigned_content', ['id' => $assigned_id]);
         }
     }
+
+    public function get_student_course($course_id)
+    {
+        $this->db->select('*');
+        $this->db->from('courses c');
+        $this->db->join('category cat', 'c.course_category=cat.category_id');
+        $this->db->where('c.id', $course_id);
+        $res = $this->db->get()->row_array();
+        if ($res) {
+            return $res;
+        }
+    }
+
+    public function get_student_courses_content($course_id)
+    {
+        $this->db->select('c.name');
+        $this->db->from('assigned_content ac');
+        $this->db->join('content c', 'ac.content_id=c.id');
+        $this->db->where('ac.course_id', $course_id);
+        $res = $this->db->get()->result_array();
+        if ($res) {
+            return $res;
+        }
+    }
 }
