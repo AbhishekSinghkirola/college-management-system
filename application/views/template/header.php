@@ -175,6 +175,23 @@
                             </li>
                         </ul>
                     </li>
+
+                    <!-- Manage Teachers  -->
+                    <li class="menu-item">
+                        <a href="javascript:void(0);" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-dock-top"></i>
+                            <div data-i18n="Account Settings">Manage Teachers</div>
+                        </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item">
+                                <a href="<?= base_url() ?>Teachers" class="menu-link">
+                                    <div data-i18n="Notifications">Teachers</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+
                 </ul>
             </aside>
             <!-- / Menu -->

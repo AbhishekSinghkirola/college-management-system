@@ -4,12 +4,12 @@ $courses = get_courses();
 
 <div class="card" id="first_screen">
     <div class="d-flex justify-content-between align-items-center pe-4">
-        <h5 class="card-header">Manage Student</h5>
-        <button type="button" class="btn btn-primary" id="add_student">Add Student</button>
+        <h5 class="card-header">Manage Teachers</h5>
+        <button type="button" class="btn btn-primary" id="add_teacher">Add Teacher</button>
     </div>
     <div class="card-body">
         <div class="table-responsive text-nowrap">
-            <table class="table table-bordered" id="students_table"></table>
+            <table class="table table-bordered" id="teacher_table"></table>
         </div>
     </div>
 </div>
@@ -20,7 +20,7 @@ $courses = get_courses();
     $(document).ready(function() {
         const courses = <?= json_encode($courses) ?>;
 
-        const students_table = $('#students_table').DataTable({
+        const students_table = $('#teacher_table').DataTable({
             ordering: false,
             processing: true,
             order: [],
@@ -37,7 +37,7 @@ $courses = get_courses();
                 }
             },
             "ajax": {
-                url: "<?= base_url() ?>Student/get_students",
+                url: "<?= base_url() ?>Teachers/get_teacher",
                 type: "POST",
                 dataSrc: function(json) {
                     if (json.Resp_code == 'RLD') {
@@ -49,8 +49,8 @@ $courses = get_courses();
                 },
             },
             columns: [{
-                    title: 'Student Name',
-                    data: 'student_name',
+                    title: 'Teacher Name',
+                    data: 'name',
                     class: 'compact all',
                 },
                 {
@@ -64,28 +64,28 @@ $courses = get_courses();
                     class: 'compact all',
                 },
                 {
-                    title: 'Address',
-                    data: 'address',
+                    title: 'Name of Bank',
+                    data: 'bank_name',
                     class: 'compact all',
                 }, 
                 {
-                    title: 'Father Name',
-                    data: 'father_name',
+                    title: 'Account Holder Name',
+                    data: 'account_holder_name',
                     class: 'compact all',
                 }, 
                 {
-                    title: 'Mother Name',
-                    data: 'mother_name',
+                    title: 'IFSC Code',
+                    data: 'ifsc_code',
                     class: 'compact all',
                 },
                 {
-                    title: 'Course',
-                    data: 'course_name',
+                    title: 'Account Number',
+                    data: 'account_number',
                     class: 'compact all',
                 },
                 {
-                    title: 'Fees',
-                    data: 'fees',
+                    title: 'Salary',
+                    data: 'salary',
                     class: 'compact all',
                 },
                 {
@@ -141,7 +141,7 @@ $courses = get_courses();
 
         /* ---------------------------- Add Student Form ---------------------------- */
 
-        $('#add_student').click(function(e) {
+        $('#add_teacher').click(function(e) {
 
             let html = `
                 <div class="card-header d-flex justify-content-between align-items-center">
