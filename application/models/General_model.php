@@ -52,4 +52,29 @@ class General_model extends CI_Model
             return $res;
         }
     }
+
+    public function get_all_users($email , $mobile){
+
+        $user_data = $this->db->select('email, mobile')
+        ->where('email', $email)
+        ->or_where('mobile', $mobile)
+        ->get('users')
+        ->result_array();
+
+        $studnet_data = $this->db->select('email','mobile')
+        ->where('email',$email)
+        ->or_where('mobile',$mobile)
+        ->get('student')
+        ->result_array();
+
+        $teacher_data = $this->db->select('email','mobile')
+        ->where('email',$email)
+        ->or_where('mobile',$mobile)
+        ->get('teacher')
+        ->result_array();
+
+        $all_users = array_merge($user_data, $studnet_data, $teacher_data);
+
+        return $all_users;
+    }
 }

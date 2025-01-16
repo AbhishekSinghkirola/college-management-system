@@ -41,6 +41,7 @@ class Teachers extends CI_Controller
 		exit(json_encode($data));
 	}
 
+
 	/* -------------------------- Function to Add New Student -------------------------- */
 	public function add_student()
 	{
