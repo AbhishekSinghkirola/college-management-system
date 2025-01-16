@@ -63,7 +63,8 @@ class Student extends CI_Controller
 		$email = $params['email'];
 		$mobile = $params['mobile'];
 
-		$all_users = $this->general_md->get_all_users($email, $mobile);
+		
+		$all_users = $this->general_md->get_all_users($email, $mobile,3); 
 
 		if(empty($all_users)){
 				

@@ -23,7 +23,7 @@ class Teachers extends CI_Controller
 		$this->load->view('template/footer');
 	}
 
-	/* ------------------------- Function to Get Student ------------------------ */
+	/* ------------------------- Function to Get Teacher ------------------------ */
 	public function get_teacher(){
 		$session = $this->session->userdata('cms_session');
 		if(!$session){
@@ -42,8 +42,8 @@ class Teachers extends CI_Controller
 	}
 
 
-	/* -------------------------- Function to Add New Student -------------------------- */
-	public function add_student()
+	/* -------------------------- Function to Add New Teacher -------------------------- */
+	public function add_teacher()
 	{
 		$session = $this->session->userdata('cms_session');
 		if (!$session) {
@@ -55,58 +55,74 @@ class Teachers extends CI_Controller
 		$data = [];
 
 		$password = md5('welcome@123');
-		$role_id = 3;
+		$role_id = 2;
 		$account_status = 'ACTIVE';
 
 		$params = $this->input->post();
+		$email = $params['email'];
+		$mobile = $params['mobile'];
+		$account_number = $params['account_number'];
 
-		$all_students = $this->students_md->get_students();
+		/* ------------------ check for email and mobile existence ------------------ */
+		$all_users = $this->general_md->get_all_users($email, $mobile ,2); 
 
-		foreach($all_students as $student){
-			if($student['mobile'] !== $params['mobile']){
-				
-				if (validate_field(@$params['student_name'], 'strname')) {
+		if(empty($all_users)){
 
-					$insert_data = [
-						'student_name' => $params['student_name'],
-						'email' => $params['email'],
-						'password' => $password,
-						'mobile' => $params['mobile'],
-						'address' => $params['address'],
-						'father_name' => $params['father_name'],
-						'mother_name' => $params['mother_name'],
-						'course' => $params['course_name'],
-						'created_on' => date('Y-m-d H:i:s'),
-						'role_id' => $role_id,
-						'account_status' => $account_status,
-		
-					];
-		
-		
-					if ($this->students_md->add_students($insert_data)) {
-						$data['Resp_code'] = 'RCS';
-						$data['Resp_desc'] = 'Student Added successfully';
-						$data['data'] = [];
+		/* ------------------ check for account number existence ------------------ */
+		$macthed_account_number = $this->general_md->check_account_number_existence($account_number);
+
+				if(empty($macthed_account_number)){
+					if (validate_field(@$params['teacher_name'], 'strname')) {
+
+						$insert_data = [
+							'name' => $params['teacher_name'],
+							'email' => $params['email'],
+							'password' => $password,
+							'mobile' => $params['mobile'],
+							'address' => $params['address'],
+							'courses' => $params['course_name'],
+							'salary' => $params['salary'],
+							'bank_name' => $params['bank_name'],
+							'account_holder_name' => $params['account_holder_name'],
+							'ifsc_code' => $params['ifsc_code'],
+							'account_number' => $params['account_number'],
+							'created_on' => date('Y-m-d H:i:s'),
+							'role_id' => $role_id,
+							'account_status' => $account_status,
+						];
+			
+			
+						if ($this->teacher_md->add_teacher($insert_data)) {
+							$data['Resp_code'] = 'RCS';
+							$data['Resp_desc'] = 'Teacher Added successfully';
+							$data['data'] = [];
+						} else {
+							$data['Resp_code'] = 'ERR';
+							$data['Resp_desc'] = 'Internal Processing Error';
+							$data['data'] = [];
+						}
+			
+						
 					} else {
 						$data['Resp_code'] = 'ERR';
-						$data['Resp_desc'] = 'Internal Processing Error';
+						$data['Resp_desc'] = 'Invalid Teacher Name';
 						$data['data'] = [];
 					}
-		
-					
-				} else {
+				}
+				else{
 					$data['Resp_code'] = 'ERR';
-					$data['Resp_desc'] = 'Invalid Student Name';
+					$data['Resp_desc'] = 'Account Number Already exist';
 					$data['data'] = [];
 				}
+
 			}
 			else{
 				$data['Resp_code'] = 'ERR';
-				$data['Resp_desc'] = 'Mobile Number Already Exist !';
+				$data['Resp_desc'] = 'Email and Mobile Already Exist !';
 				$data['data'] = [];
 				
 			}
-		}
+		
 		exit(json_encode($data));
 	}
 
