@@ -182,6 +182,7 @@ $user = get_logged_in_user();
                                 </li>
                             </ul>
                         </li>
+
                     <?php endif; ?>
 
                     <?php if ($user['role_type'] === 'USER'): ?>
@@ -190,6 +191,14 @@ $user = get_logged_in_user();
                             <a href="<?= base_url() ?>Courses/course_details" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                                 <div data-i18n="Analytics">Course Details</div>
+                            </a>
+                        </li>
+
+                        <!-- Manage Attendance -->
+                        <li class="menu-item">
+                            <a href="<?= base_url() ?>Attendance/student_attendance" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                                <div data-i18n="Analytics">Attendance</div>
                             </a>
                         </li>
                     <?php endif; ?>
