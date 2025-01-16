@@ -15,6 +15,10 @@ class Auth_model extends CI_Model
         if ($mobile && $password && $role_id) {
             if ($role_id == '1') {
                 $table = 'users';
+            } else if ($role_id == '2') {
+                $table = 'teacher';
+            } else if ($role_id == '3') {
+                $table = 'student';
             }
 
             if ($table) {

@@ -1,3 +1,6 @@
+<?php
+$user = get_logged_in_user();
+?>
 <!DOCTYPE html>
 
 <html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default" data-assets-path="assets/" data-template="vertical-menu-template-free">
@@ -122,54 +125,91 @@
                         </a>
                     </li>
 
+                    <?php if ($user['role_type'] !== 'USER'): ?>
+                        <!-- Manage Student  -->
+                        <li class="menu-item">
+                            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                <i class="menu-icon tf-icons bx bx-dock-top"></i>
+                                <div data-i18n="Account Settings">Manage Student</div>
+                            </a>
+                            <ul class="menu-sub">
+                                <li class="menu-item">
+                                    <a href="<?= base_url() ?>Student/pending_registration" class="menu-link">
+                                        <div data-i18n="Account">Pending Registration</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="<?= base_url() ?>Student" class="menu-link">
+                                        <div data-i18n="Notifications">Students</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="pages-account-settings-connections.html" class="menu-link">
+                                        <div data-i18n="Connections">Promotion Student</div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php if ($user['role_type'] !== 'USER'): ?>
+                        <!-- Manage Courses -->
+                        <li class="menu-item">
+                            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                                <i class="menu-icon tf-icons bx bx-dock-top"></i>
+                                <div data-i18n="Account Settings">Manage Courses</div>
+                            </a>
+                            <ul class="menu-sub">
+                                <li class="menu-item">
+                                    <a href="<?= base_url() ?>Courses/category" class="menu-link">
+                                        <div data-i18n="Notifications">Course Category</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="<?= base_url() ?>Courses" class="menu-link">
+                                        <div data-i18n="Account">Courses</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="<?= base_url() ?>Courses/content" class="menu-link">
+                                        <div data-i18n="Notifications">Content</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="<?= base_url() ?>Courses/assign_content" class="menu-link">
+                                        <div data-i18n="Notifications">Assign Content</div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php if ($user['role_type'] === 'USER'): ?>
+                        <!-- Courses  -->
+                        <li class="menu-item">
+                            <a href="<?= base_url() ?>Courses/course_details" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                                <div data-i18n="Analytics">Course Details</div>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+
+                    <!-- Manage Teachers  -->
                     <li class="menu-item">
                         <a href="javascript:void(0);" class="menu-link menu-toggle">
                             <i class="menu-icon tf-icons bx bx-dock-top"></i>
-                            <div data-i18n="Account Settings">Manage Student</div>
+                            <div data-i18n="Account Settings">Manage Teachers</div>
                         </a>
                         <ul class="menu-sub">
                             <li class="menu-item">
-                                <a href="<?= base_url() ?>Student/pending_registration" class="menu-link">
-                                    <div data-i18n="Account">Pending Registration</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="pages-account-settings-notifications.html" class="menu-link">
-                                    <div data-i18n="Notifications">Students</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="pages-account-settings-connections.html" class="menu-link">
-                                    <div data-i18n="Connections">Promotion Student</div>
+                                <a href="<?= base_url() ?>Teachers" class="menu-link">
+                                    <div data-i18n="Notifications">Teachers</div>
                                 </a>
                             </li>
                         </ul>
                     </li>
 
-                    <!-- Manage Courses -->
-                    <li class="menu-item">
-                        <a href="javascript:void(0);" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons bx bx-dock-top"></i>
-                            <div data-i18n="Account Settings">Manage Courses</div>
-                        </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item">
-                                <a href="<?= base_url() ?>Courses/category" class="menu-link">
-                                    <div data-i18n="Notifications">Course Category</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="<?= base_url() ?>Courses" class="menu-link">
-                                    <div data-i18n="Account">Courses</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="<?= base_url() ?>Courses/content" class="menu-link">
-                                    <div data-i18n="Notifications">Content</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+
                 </ul>
             </aside>
             <!-- / Menu -->

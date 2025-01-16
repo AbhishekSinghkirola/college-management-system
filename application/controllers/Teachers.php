@@ -1,13 +1,13 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Student extends CI_Controller
+class Teachers extends CI_Controller
 {
 
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('Students_model', 'students_md');
+		$this->load->model('Teachers_model', 'teacher_md');
 		
 	}
 
@@ -19,25 +19,24 @@ class Student extends CI_Controller
 			redirect('login');
 		}
 		$this->load->view('template/header');
-		$this->load->view('student/students');
+		$this->load->view('teacher/teachers');
 		$this->load->view('template/footer');
 	}
 
 	/* ------------------------- Function to Get Student ------------------------ */
-	public function get_students(){
+	public function get_teacher(){
 		$session = $this->session->userdata('cms_session');
 		if(!$session){
 			$this->session->sess_destroy();
 			exit(json_encode(['Resp_code' => 'RLD', 'Resp_desc' => 'Session Destroyed']));
-
 		}
 
 		$data = [];
-		$students = $this->students_md->get_students();
+		$teachers = $this->teacher_md->get_teacher();
 
 		$data['Resp_code'] = 'RCS';
-		$data['Resp_desc'] = 'Students Fetched Successfully'; 
-		$data['data'] = is_array($students) ? $students : [];
+		$data['Resp_desc'] = 'Teachers Fetched Successfully'; 
+		$data['data'] = is_array($teachers) ? $teachers : [];
 
 		exit(json_encode($data));
 	}

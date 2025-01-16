@@ -105,7 +105,9 @@ if (!function_exists('common_status_array')) {
     function common_status_array($validate_by = null)
     {
         $array = array(
-            "account_status" => array('ACTIVE' => 'ACTIVE', 'PENDING' => 'PENING', 'BLOCKED' => 'BLOCKED', 'INACTIVE' => 'INACTIVE'),
+            "account_status" => array('ACTIVE' => 'ACTIVE', 'PENDING' => 'PENDING', 'BLOCKED' => 'BLOCKED', 'INACTIVE' => 'INACTIVE'),
+
+            "gender" => array('FEMALE' => 'Female', 'MALE' => 'Male', 'OTHERS' => 'Others')
         );
 
         if ($validate_by) {
@@ -128,5 +130,41 @@ if (!function_exists(('get_course_categories'))) {
 
         $course_categories = $CI->general_md->get_course_categories();
         return $course_categories;
+    }
+}
+
+/* ------------------------- Function to get courses ------------------------ */
+if (!function_exists(('get_courses'))) {
+    function get_courses()
+    {
+        $CI = &get_instance();
+
+        $courses = $CI->general_md->get_courses();
+
+        return $courses;
+    }
+}
+
+/* ------------------------- Function to get content ------------------------ */
+if (!function_exists(('get_content'))) {
+    function get_content()
+    {
+        $CI = &get_instance();
+
+        $courses = $CI->general_md->get_content();
+        return $courses;
+    }
+}
+
+/* --------------------- Function to get logged in user --------------------- */
+if (!function_exists(('get_logged_in_user'))) {
+    function get_logged_in_user()
+    {
+        $CI = &get_instance();
+
+        $session = $CI->session->userdata('cms_session');
+        $user = $CI->general_md->get_user($session['user_id'], $session['role_id']);
+
+        return $user;
     }
 }

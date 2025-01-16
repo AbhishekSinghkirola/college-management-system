@@ -43,7 +43,6 @@ $course_categories = get_course_categories();
                         window.location.reload(true);
                     } else if (json.Resp_code != 'RCS') {
                         toastr.error(json.Resp_desc)
-
                     }
                     return json.data ? json.data : [];
                 },
@@ -61,6 +60,11 @@ $course_categories = get_course_categories();
                 {
                     title: 'Course Duration',
                     data: 'course_duration',
+                    class: 'compact all',
+                },
+                {
+                    title: 'Course Fees',
+                    data: 'fees',
                     class: 'compact all',
                 },
                 {
@@ -126,12 +130,16 @@ $course_categories = get_course_categories();
                         </select>
                         </div>
                     <div class="mb-6">
-                        <label class="form-label" for="category_name">Course Name</label>
+                        <label class="form-label" for="course_name">Course Name</label>
                         <input type="text" class="form-control" id="course_name" placeholder="Enter Course Name" autofocus>
                     </div>
-                      <div class="mb-6">
+                    <div class="mb-6">
                         <label class="form-label" for="category_name">Course Duration</label>
                         <input type="text" class="form-control" id="course_duration" placeholder="Enter Course Duration" autofocus>
+                    </div>
+                    <div class="mb-6">
+                        <label class="form-label" for="course_fees">Course Fees</label>
+                        <input type="text" class="form-control" id="course_fees" placeholder="Enter Course Fees" autofocus>
                     </div>
                     <button type="button" class="btn btn-danger mt-5" id="back_to_first_screen">Back</button>
                     <button type="button" class="btn btn-primary mt-5" id="save_course">Save</button>
@@ -151,7 +159,8 @@ $course_categories = get_course_categories();
                     valid: true,
                     course_category: $('#course_category').val(),
                     course_name: $('#course_name').val(),
-                    course_duration: $('#course_duration').val()
+                    course_duration: $('#course_duration').val(),
+                    course_fees: $('#course_fees').val()
 
                 }
 
@@ -170,6 +179,12 @@ $course_categories = get_course_categories();
 
                 if (params.course_duration === '') {
                     toastr.error('Enter Course Duration');
+                    params.valid = false;
+                    return false;
+                }
+
+                if (params.course_fees === '') {
+                    toastr.error('Enter Course Fees');
                     params.valid = false;
                     return false;
                 }
@@ -214,12 +229,16 @@ $course_categories = get_course_categories();
                         </select>
                         </div>
                     <div class="mb-6">
-                        <label class="form-label" for="category_name">Course Name</label>
+                        <label class="form-label" for="course_name">Course Name</label>
                         <input type="text" class="form-control" id="course_name" placeholder="Enter Course Name" value="${showtd.course_name}" autofocus>
                     </div>
-                      <div class="mb-6">
-                        <label class="form-label" for="category_name">Course Duration</label>
+                    <div class="mb-6">
+                        <label class="form-label" for="course_duration">Course Duration</label>
                         <input type="text" class="form-control" id="course_duration" placeholder="Enter Course Duration" value="${showtd.course_duration}" autofocus>
+                    </div>
+                    <div class="mb-6">
+                        <label class="form-label" for="course_fees">Course Duration</label>
+                        <input type="text" class="form-control" id="course_fees" placeholder="Enter Course Duration" value="${showtd.fees}" autofocus>
                     </div>
                     <button type="button" class="btn btn-danger mt-5" id="back_to_first_screen">Back</button>
                     <button type="button" class="btn btn-primary mt-5" id="edit_course">Save</button>
@@ -239,6 +258,7 @@ $course_categories = get_course_categories();
                     course_category: $('#course_category').val(),
                     course_name: $('#course_name').val(),
                     course_duration: $('#course_duration').val(),
+                    course_fees: $('#course_fees').val(),
                     course_id: showtd.id
                 }
 

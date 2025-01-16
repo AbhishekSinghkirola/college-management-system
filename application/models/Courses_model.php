@@ -114,4 +114,79 @@ class Courses_model extends CI_Model
             return $this->db->update('content', $update_array, ['id' => $id]);
         }
     }
+
+    public function delete_content($content_id)
+    {
+        if ($content_id) {
+            return $this->db->delete('content', ['id' => $content_id]);
+        }
+    }
+
+
+    public function get_assigned_content($assigned_id = null)
+    {
+
+        $this->db->select('assigned_content.id as assigned_id, courses.course_name, content.name as content_name, assigned_content.course_id, assigned_content.content_id');
+        $this->db->from('assigned_content');
+        $this->db->join('courses', 'assigned_content.course_id=courses.id');
+        $this->db->join('content', 'assigned_content.content_id=content.id');
+
+        if ($assigned_id) {
+            $this->db->where('assigned_content.id', $assigned_id);
+            $res = $this->db->get()->row_array();
+        } else {
+            $res = $this->db->get()->result_array();
+        }
+
+
+        if ($res) {
+            return $res;
+        }
+    }
+
+    public function save_assigned_content($insert_data)
+    {
+        return $this->db->insert('assigned_content', $insert_data);
+    }
+
+    public function update_assigned_content($update_array)
+    {
+        $id = $update_array['id'];
+
+        if ($id) {
+            unset($update_array['id']);
+            return $this->db->update('assigned_content', $update_array, ['id' => $id]);
+        }
+    }
+
+    public function delete_assigend_content($assigned_id)
+    {
+        if ($assigned_id) {
+            return $this->db->delete('assigned_content', ['id' => $assigned_id]);
+        }
+    }
+
+    public function get_student_course($course_id)
+    {
+        $this->db->select('*');
+        $this->db->from('courses c');
+        $this->db->join('category cat', 'c.course_category=cat.category_id');
+        $this->db->where('c.id', $course_id);
+        $res = $this->db->get()->row_array();
+        if ($res) {
+            return $res;
+        }
+    }
+
+    public function get_student_courses_content($course_id)
+    {
+        $this->db->select('c.name');
+        $this->db->from('assigned_content ac');
+        $this->db->join('content c', 'ac.content_id=c.id');
+        $this->db->where('ac.course_id', $course_id);
+        $res = $this->db->get()->result_array();
+        if ($res) {
+            return $res;
+        }
+    }
 }

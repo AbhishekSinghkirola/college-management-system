@@ -1,11 +1,15 @@
+<?php
+$courses = get_courses() ?? [];
+$content = get_content() ?? [];
+?>
 <div class="card" id="first_screen">
     <div class="d-flex justify-content-between align-items-center pe-4">
-        <h5 class="card-header">Manage Courses Content</h5>
-        <button type="button" class="btn btn-primary" id="add_course">Add Content</button>
+        <h5 class="card-header">Assign Content To Courses</h5>
+        <button type="button" class="btn btn-primary" id="assign_content">Assign Content</button>
     </div>
     <div class="card-body">
         <div class="table-responsive text-nowrap">
-            <table class="table table-bordered" id="content_table"></table>
+            <table class="table table-bordered" id="data_table"></table>
         </div>
     </div>
 </div>
@@ -14,8 +18,11 @@
 
 <script>
     $(document).ready(function() {
+        const courses = <?= json_encode($courses) ?>;
+        const content = <?= json_encode($content) ?>;
+        console.log(courses, content);
 
-        const content_table = $('#content_table').DataTable({
+        const datatable = $('#data_table').DataTable({
             ordering: false,
             processing: true,
             order: [],
@@ -32,7 +39,7 @@
                 }
             },
             "ajax": {
-                url: "<?= base_url() ?>Courses/get_content",
+                url: "<?= base_url() ?>Courses/get_assigned_content",
                 type: "POST",
                 dataSrc: function(json) {
                     if (json.Resp_code == 'RLD') {
@@ -45,8 +52,13 @@
                 },
             },
             columns: [{
+                    title: 'Course Name',
+                    data: 'course_name',
+                    class: 'compact all',
+                },
+                {
                     title: 'Content Name',
-                    data: 'name',
+                    data: 'content_name',
                     class: 'compact all',
                 },
                 {
@@ -56,8 +68,8 @@
                     render: function(data, type, full, meta) {
                         return `
                             <div class="d-flex">
-                                <a class="dropdown-item edit_content" style="width:max-content;" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i> Edit</a>
-                                <a class="dropdown-item delete_content" style="width:max-content;" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Delete</a>
+                                <a class="dropdown-item edit_relation" style="width:max-content;" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i> Edit</a>
+                                <a class="dropdown-item delete_relation" style="width:max-content;" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Delete</a>
                             </div>
                         `;
                     }
@@ -93,22 +105,32 @@
                 },
 
             ]
-        })
+        });
 
-        /* ------------------------------- Add content ------------------------------ */
-        $('#add_course').click(function(e) {
+        /* ----------------------------- Assign Content ----------------------------- */
+        $('#assign_content').click(function(e) {
 
             let html = `
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Add Content</h5>
+                    <h5 class="mb-0">Assign Content</h5>
                 </div>
                 <div class="card-body">
                     <div class="mb-6">
-                        <label class="form-label" for="content_name">Content Name</label>
-                        <input type="text" class="form-control" id="content_name" placeholder="Enter Content Name" autofocus>
+                        <label class="form-label" for="course_name">Course</label>
+                        <select class="form-control" id="course_name">
+                            <option value="">Select Course</option>
+                            ${courses.map(course => `<option value="${course.id}">${course.course_name}</option>`).join()}
+                        </select>
+                    </div>
+                    <div class="mb-6">
+                        <label class="form-label" for="content_name">Content</label>
+                        <select class="form-control" id="content_name">
+                            <option value="">Select Content</option>
+                            ${content.map(con => `<option value="${con.id}">${con.name}</option>`).join()}
+                        </select>
                     </div>
                     <button type="button" class="btn btn-danger mt-5" id="back_to_first_screen">Back</button>
-                    <button type="button" class="btn btn-primary mt-5" id="save_content">Save</button>
+                    <button type="button" class="btn btn-primary mt-5" id="assign">Save</button>
                 </div>
             `;
             $('#first_screen').hide();
@@ -119,13 +141,20 @@
                 $('#second_screen').html('').hide();
             });
 
-            /* ------------------------------ Add Content ------------------------------ */
-            $('#save_content').click(function(e) {
+            /* ------------------------------ Assign Content ------------------------------ */
+            $('#assign').click(function(e) {
                 const params = {
                     valid: true,
-                    content_name: $('#content_name').val(),
+                    course_name: $('#course_name').val(),
+                    content_name: $('#content_name').val()
+
                 }
 
+                if (params.course_name === '') {
+                    toastr.error('Enter Course Name');
+                    params.valid = false;
+                    return false;
+                }
 
                 if (params.content_name === '') {
                     toastr.error('Enter Content Name');
@@ -135,7 +164,7 @@
 
                 if (params.valid) {
                     $.ajax({
-                        url: '<?= base_url() ?>Courses/add_content',
+                        url: '<?= base_url() ?>Courses/save_assigned_content',
                         method: 'POST',
                         dataType: 'JSON',
                         data: params,
@@ -143,7 +172,7 @@
                             if (res.Resp_code === 'RCS') {
                                 toastr.info(res.Resp_desc)
                                 $('#back_to_first_screen').click()
-                                content_table.ajax.reload()
+                                datatable.ajax.reload()
                             } else if (res.Resp_code === 'RLD') {
                                 window.location.reload();
                             } else {
@@ -153,28 +182,36 @@
                     })
                 }
             })
-
-
         });
 
-        /* ------------------------------ Edit Content ------------------------------ */
-        content_table.on('click', '.edit_content', function() {
+        /* -------------------------- Edit Assigned Content ------------------------- */
+        datatable.on('click', '.edit_relation', function() {
             const row = $(this).closest('tr');
-            const showtd = content_table.row(row).data();
+            const showtd = datatable.row(row).data();
 
             let html = `
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Edit Content</h5>
+                    <h5 class="mb-0">Edit Assigned Content</h5>
                 </div>
                 <div class="card-body">
                     <div class="mb-6">
-                        <label class="form-label" for="content_name">Content Name</label>
-                        <input type="text" class="form-control" id="content_name" placeholder="Enter Course Name" value="${showtd.name}" autofocus>
+                        <label class="form-label" for="edit_course_name">Course</label>
+                        <select class="form-control" id="edit_course_name">
+                            <option value="">Select Course</option>
+                            ${courses.map(course => `<option value="${course.id}" ${course.id == showtd.course_id ? 'selected' : ''}>${course.course_name}</option>`).join()}
+                        </select>
+                    </div>
+                    <div class="mb-6">
+                        <label class="form-label" for="edit_content_name">Content</label>
+                        <select class="form-control" id="edit_content_name">
+                            <option value="">Select Content</option>
+                            ${content.map(con => `<option value="${con.id}" ${con.id == showtd.content_id ? 'selected' : ''}>${con.name}</option>`).join()}
+                        </select>
                     </div>
                     <button type="button" class="btn btn-danger mt-5" id="back_to_first_screen">Back</button>
-                    <button type="button" class="btn btn-primary mt-5" id="edit_content">Save</button>
+                    <button type="button" class="btn btn-primary mt-5" id="edit_assigned_content">Save</button>
                 </div>
-                 `;
+            `;
             $('#first_screen').hide();
             $('#second_screen').html(html).show();
 
@@ -183,15 +220,16 @@
                 $('#second_screen').html('').hide();
             });
 
-            $('#edit_content').click(function() {
+            $('#edit_assigned_content').click(function() {
                 const params = {
                     valid: true,
-                    content_name: $('#content_name').val(),
-                    content_id: showtd.id
+                    course_id: $('#edit_course_name').val(),
+                    content_id: $('#edit_content_name').val(),
+                    assigned_id: showtd.assigned_id
                 }
 
                 $.ajax({
-                    url: '<?= base_url() ?>Courses/edit_content',
+                    url: '<?= base_url() ?>Courses/edit_assigned_content',
                     method: 'POST',
                     dataType: 'JSON',
                     data: params,
@@ -199,7 +237,7 @@
                         if (res.Resp_code === 'RCS') {
                             toastr.info(res.Resp_desc)
                             $('#back_to_first_screen').click()
-                            content_table.ajax.reload()
+                            datatable.ajax.reload()
                         } else if (res.Resp_code === 'RLD') {
                             window.location.reload();
                         } else {
@@ -209,28 +247,25 @@
                 })
             })
 
+        });
 
-
-
-        })
-
-        /* ----------------------------- Delete Content ----------------------------- */
-        content_table.on('click', '.delete_content', function() {
+        /* ------------------------- Delte Assigned Content ------------------------- */
+        datatable.on('click', '.delete_relation', function() {
             const row = $(this).closest('tr');
-            const showtd = content_table.row(row).data();
+            const showtd = datatable.row(row).data();
 
 
             $.ajax({
-                url: '<?= base_url() ?>Courses/delete_content',
+                url: '<?= base_url() ?>Courses/delete_assigned_content',
                 method: 'POST',
                 dataType: 'JSON',
                 data: {
-                    content_id: showtd.id
+                    assigned_id: showtd.assigned_id
                 },
                 success: function(res) {
                     if (res.Resp_code === 'RCS') {
                         toastr.info(res.Resp_desc)
-                        content_table.ajax.reload()
+                        datatable.ajax.reload()
                     } else if (res.Resp_code === 'RLD') {
                         window.location.reload();
                     } else {
