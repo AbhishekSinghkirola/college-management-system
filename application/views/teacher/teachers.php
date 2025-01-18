@@ -20,7 +20,7 @@ $courses = get_courses();
     $(document).ready(function() {
         const courses = <?= json_encode($courses) ?>;
 
-        const students_table = $('#teacher_table').DataTable({
+        const teacher_table = $('#teacher_table').DataTable({
             ordering: false,
             processing: true,
             order: [],
@@ -64,6 +64,11 @@ $courses = get_courses();
                     class: 'compact all',
                 },
                 {
+                    title: 'Address',
+                    data: 'address',
+                    class: 'compact all',
+                },
+                {
                     title: 'Name of Bank',
                     data: 'bank_name',
                     class: 'compact all',
@@ -100,8 +105,8 @@ $courses = get_courses();
                     render: function(data, type, full, meta) {
                         return `
                             <div class="d-flex">
-                                <a class="dropdown-item edit_student" style="width:max-content;" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i> Edit</a>
-                                <a class="dropdown-item delete_student" style="width:max-content;" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Delete</a>
+                                <a class="dropdown-item edit_teacher" style="width:max-content;" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i> Edit</a>
+                                <a class="dropdown-item delete_teacher" style="width:max-content;" href="javascript:void(0);"><i class="bx bx-trash me-1"></i> Delete</a>
                             </div>
                         `;
                     }
@@ -139,29 +144,30 @@ $courses = get_courses();
             ]
         })
 
-        /* ---------------------------- Add Student Form ---------------------------- */
+        /* ---------------------------- Add Teacher Form ---------------------------- */
 
         $('#add_teacher').click(function(e) {
 
             let html = `
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Add Student</h5>
+                    <h5 class="mb-0">Add Teacher</h5>
                 </div>
                 <div class="card-body">
                 <div class="row">
                     <div class="col-6 mb-6">
-                        <label class="form-label" for="student_name">Student Name</label>
-                        <input type="text" class="form-control" id="student_name" placeholder="Enter Student Name" autofocus>
+                        <label class="form-label" for="teacher_name">Teacher Name</label>
+                        <input type="text" class="form-control" id="teacher_name" placeholder="Enter Teacher Name" autofocus>
                     </div>
                       <div class="col-6 mb-6">
                         <label class="form-label" for="email">Email</label>
                         <input type="email" class="form-control" id="email" placeholder="Enter Email Address" autofocus>
                     </div>
                 </div>
+
                 <div class="row mt-2">
                     <div class="col-6 mb-6">
                         <label class="form-label" for="mobile">Mobile</label>
-                        <input type="number" class="form-control" id="mobile" placeholder="Enter Student Number" autofocus>
+                        <input type="number" class="form-control" id="mobile" placeholder="Enter Mobile Number" autofocus>
                     </div>
 
                     <div class="col-6 mb-6">
@@ -170,29 +176,48 @@ $courses = get_courses();
                     </div>
                 </div>
 
-                 <div class="row mt-2">
-                    <div class="col-6 mb-6">
-                        <label class="form-label" for="father_name">Father Name</label>
-                        <input type="text" class="form-control" id="father_name" placeholder="Enter Father Name" autofocus>
-                    </div>
-
-                    <div class="col-6 mb-6">
-                        <label class="form-label" for="mother_name">Mother Name</label>
-                        <input type="text" class="form-control" id="mother_name" placeholder="Enter Mother Name" autofocus>
-                    </div>
-                </div>
-
                 <div class="row mt-2">
-                    <div class="mb-6">
+                    <div class="col-6 mb-6">
                         <label class="form-label" for="course_name">Courses</label>
                         <select class="form-control" id="course_name">
                             <option value="">Select Course</option>
                             ${courses.map(courses => `<option value="${courses.id}">${courses.course_name}</option>`).join()}
                         </select>
                     </div>
+
+                     <div class="col-6 mb-6">
+                        <label class="form-label" for="salary">Salary</label>
+                        <input type="number" class="form-control" id="salary" placeholder="Enter Salary" autofocus>
+                    </div>
+
                 </div>
+
+                 <div class="row mt-2">
+                    <div class="col-6 mb-6">
+                        <label class="form-label" for="bank_name">Bank Name</label>
+                        <input type="text" class="form-control" id="bank_name" placeholder="Enter Bank Name" autofocus>
+                    </div>
+
+                    <div class="col-6 mb-6">
+                        <label class="form-label" for="account_holder_name">Account Holder Name</label>
+                        <input type="text" class="form-control" id="account_holder_name" placeholder="Enter Account Holder Name" autofocus>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-6 mb-6">
+                        <label class="form-label" for="ifsc_code">IFSC Code</label>
+                        <input type="text" class="form-control" id="ifsc_code" placeholder="Enter IFSC Code" autofocus>
+                    </div>
+
+                    <div class="col-6 mb-6">
+                        <label class="form-label" for="account_number">Account Number</label>
+                        <input type="text" class="form-control" id="account_number" placeholder="Enter Account Number" autofocus>
+                    </div>
+                </div>
+
                     <button type="button" class="btn btn-danger mt-5" id="back_to_first_screen">Back</button>
-                    <button type="button" class="btn btn-primary mt-5" id="save_student">Save</button>
+                    <button type="button" class="btn btn-primary mt-5" id="save_teacher">Save</button>
                 </div>
             `;
             $('#first_screen').hide();
@@ -203,22 +228,25 @@ $courses = get_courses();
                 $('#second_screen').html('').hide();
             });
 
-            /* ------------------------------ Save Student Data------------------------------ */
-            $('#save_student').click(function(e) {
+            /* ------------------------------ Save Teacher Data------------------------------ */
+            $('#save_teacher').click(function(e) {
                 const params = {
                     valid: true,
-                    student_name: $('#student_name').val(),
+                    teacher_name: $('#teacher_name').val(),
                     email: $('#email').val(),
                     mobile: $('#mobile').val(),
                     address: $('#address').val(),
-                    father_name: $('#father_name').val(),
-                    mother_name: $('#mother_name').val(),
-                    course_name: $('#course_name').val()
-
+                    course_name: $('#course_name').val(),
+                    salary: $('#salary').val(),
+                    bank_name: $('#bank_name').val(),
+                    account_holder_name: $('#account_holder_name').val(),
+                    ifsc_code: $('#ifsc_code').val(),
+                    account_number: $('#account_number').val(),
+                    
                 }
 
-                if (params.student_name === '') {
-                    toastr.error('Enter Student Name');
+                if (params.teacher_name === '') {
+                    toastr.error('Enter Teacher Name');
                     params.valid = false;
                     return false;
                 }
@@ -242,26 +270,45 @@ $courses = get_courses();
                     return false;
                 }
 
-                if (params.father_name === '') {
-                    toastr.error('Enter Your Father Name');
-                    params.valid = false;
-                    return false;
-                }
-
-                if (params.mother_name === '') {
-                    toastr.error('Enter Your Mother Name');
-                    params.valid = false;
-                    return false;
-                }
-
                 if (params.course_name === '') {
                     toastr.error('Select Course');
                     params.valid = false;
                     return false;
                 }
+
+                if(params.salary == ''){
+                    toastr.error('Enter Salary');
+                    params.valid = false;
+                    return false;
+                }
+
+                if(params.bank_name == ''){
+                    toastr.error('Enter Bank Name');
+                    params.valid = false;
+                    return false;
+                }
+
+                if(params.account_holder_name == ''){
+                    toastr.error('Enter Account Holder Name');
+                    params.valid = false;
+                    return false;
+                }
+
+                if(params.ifsc_code == ''){
+                    toastr.error('Enter IFSC Code');
+                    params.valid = false;
+                    return false;
+                }
+                
+                if(params.account_number == ''){
+                    toastr.error('Enter Account Number');
+                    params.valid = false;
+                    return false;
+                }
+
                 if (params.valid) {
                     $.ajax({
-                        url: '<?= base_url() ?>Student/add_student',
+                        url: '<?= base_url() ?>Teachers/add_teacher',
                         method: 'POST',
                         dataType: 'JSON',
                         data: params,
@@ -269,7 +316,7 @@ $courses = get_courses();
                             if (res.Resp_code === 'RCS') {
                                 toastr.info(res.Resp_desc)
                                 $('#back_to_first_screen').click()
-                                students_table.ajax.reload()
+                                teacher_table.ajax.reload()
                             } else if (res.Resp_code === 'RLD') {
                                 window.location.reload();
                             } else {
@@ -281,30 +328,31 @@ $courses = get_courses();
             })
         });
 
-        /* ------------------------------ Edit Student Form ----------------------------- */
-        students_table.on('click', '.edit_student', function() {
+        /* ------------------------------ Edit Teacher Form ----------------------------- */
+        teacher_table.on('click', '.edit_teacher', function() {
             const row = $(this).closest('tr');
-            const showtd = students_table.row(row).data();
+            const showtd = teacher_table.row(row).data();
            
             let html = `
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Edit Student</h5>
+                    <h5 class="mb-0">Edit Teacher</h5>
                 </div>
                 <div class="card-body">
                 <div class="row">
                     <div class="col-6 mb-6">
-                        <label class="form-label" for="student_name">Student Name</label>
-                        <input type="text" class="form-control" id="student_name" placeholder="Enter Student Name" value="${showtd.student_name}" autofocus>
+                        <label class="form-label" for="teacher_name">Teacher Name</label>
+                        <input type="text" class="form-control" id="teacher_name" placeholder="Enter Teacher Name" value="${showtd.name}" autofocus>
                     </div>
                       <div class="col-6 mb-6">
                         <label class="form-label" for="email">Email</label>
-                        <input type="email" class="form-control" id="email" placeholder="Enter Email Address" value="${showtd.email}" autofocus>
+                        <input type="email" class="form-control" id="email" placeholder="Enter Email Address"  value="${showtd.email}" autofocus>
                     </div>
                 </div>
+
                 <div class="row mt-2">
                     <div class="col-6 mb-6">
                         <label class="form-label" for="mobile">Mobile</label>
-                        <input type="number" class="form-control" id="mobile" placeholder="Enter Student Number" value="${showtd.mobile}" autofocus>
+                        <input type="number" class="form-control" id="mobile" placeholder="Enter Mobile Number" value="${showtd.mobile}" autofocus>
                     </div>
 
                     <div class="col-6 mb-6">
@@ -313,27 +361,46 @@ $courses = get_courses();
                     </div>
                 </div>
 
+                <div class="row mt-2">
+                     <div class="col-6 mb-6">
+                        <label class="form-label" for="course_name">Courses</label>
+                        <select class="form-control" id="course_name">
+                            <option value="">Select Course</option>
+                            ${courses.map(courses => `<option value="${courses.id}" ${courses.id == showtd.courses ? 'selected' : ''}>${courses.course_name}</option>`).join()}
+                        </select>
+                    </div>
+
+                     <div class="col-6 mb-6">
+                        <label class="form-label" for="salary">Salary</label>
+                        <input type="number" class="form-control" id="salary" placeholder="Enter Salary" value="${showtd.salary}" autofocus>
+                    </div>
+
+                </div>
+
                  <div class="row mt-2">
                     <div class="col-6 mb-6">
-                        <label class="form-label" for="father_name">Father Name</label>
-                        <input type="text" class="form-control" id="father_name" placeholder="Enter Father Name" value="${showtd.father_name}" autofocus>
+                        <label class="form-label" for="bank_name">Bank Name</label>
+                        <input type="text" class="form-control" id="bank_name" placeholder="Enter Bank Name" value="${showtd.name}" autofocus>
                     </div>
 
                     <div class="col-6 mb-6">
-                        <label class="form-label" for="mother_name">Mother Name</label>
-                        <input type="text" class="form-control" id="mother_name" placeholder="Enter Mother Name" value="${showtd.mother_name}" autofocus>
+                        <label class="form-label" for="account_holder_name">Account Holder Name</label>
+                        <input type="text" class="form-control" id="account_holder_name" placeholder="Enter Account Holder Name" value="${showtd.account_holder_name}" autofocus>
                     </div>
                 </div>
 
                 <div class="row mt-2">
                     <div class="col-6 mb-6">
-                        <label class="form-label" for="course_name">Courses</label>
-                        <select class="form-control" id="course_name">
-                            <option value="">Select Course</option>
-                            ${courses.map(courses => `<option value="${courses.id}" ${courses.id == showtd.course ? 'selected' : ''}>${courses.course_name}</option>`).join()}
-                        </select>
+                        <label class="form-label" for="ifsc_code">IFSC Code</label>
+                        <input type="text" class="form-control" id="ifsc_code" placeholder="Enter IFSC Code" value="${showtd.ifsc_code}" autofocus>
                     </div>
+
                     <div class="col-6 mb-6">
+                        <label class="form-label" for="account_number">Account Number</label>
+                        <input type="text" class="form-control" id="account_number" placeholder="Enter Account Number" value="${showtd.account_number}" autofocus>
+                    </div>
+
+                     <div class="col-6 mb-6">
                         <label class="form-label" for="course_name">Account Status</label>
                         <select class="form-control" id="account_status">
                             <option value="">Select Account Status</option>
@@ -344,8 +411,9 @@ $courses = get_courses();
                         </select>
                     </div>
                 </div>
+
                     <button type="button" class="btn btn-danger mt-5" id="back_to_first_screen">Back</button>
-                    <button type="button" class="btn btn-primary mt-5" id="edit_student">Save</button>
+                    <button type="button" class="btn btn-primary mt-5" id="save_teacher">Save</button>
                 </div>
             `;
             $('#first_screen').hide();
@@ -356,24 +424,29 @@ $courses = get_courses();
                 $('#second_screen').html('').hide();
             });
 
-            /* ---------------------------- Save Edited Student Data --------------------------- */
+            /* ---------------------------- Save Edited Teacher Data --------------------------- */
 
-            $('#edit_student').click(function() {
+            $('#save_teacher').click(function() {
                 const params = {
+
                     valid: true,
-                    student_id: showtd.student_id,
-                    student_name: $('#student_name').val(),
+                    teacher_id: showtd.teacher_id,
+                    teacher_name: $('#teacher_name').val(),
                     email: $('#email').val(),
                     mobile: $('#mobile').val(),
                     address: $('#address').val(),
-                    father_name: $('#father_name').val(),
-                    mother_name: $('#mother_name').val(),
                     course_id: $('#course_name').val(),
+                    salary: $('#salary').val(),
+                    bank_name: $('#bank_name').val(),
+                    account_holder_name: $('#account_holder_name').val(),
+                    ifsc_code: $('#ifsc_code').val(),
+                    account_number: $('#account_number').val(),
                     account_status : $('#account_status').val() 
+
                 }
 
                 $.ajax({
-                    url: '<?= base_url() ?>Student/edit_student',
+                    url: '<?= base_url() ?>Teachers/edit_teacher',
                     method: 'POST',
                     dataType: 'JSON',
                     data: params,
@@ -381,7 +454,7 @@ $courses = get_courses();
                         if (res.Resp_code === 'RCS') {
                             toastr.info(res.Resp_desc)
                             $('#back_to_first_screen').click()
-                            students_table.ajax.reload()
+                            teacher_table.ajax.reload()
                         } else if (res.Resp_code === 'RLD') {
                             window.location.reload();
                         } else {
@@ -397,22 +470,22 @@ $courses = get_courses();
         })
 
         /* ----------------------------- Delete Student ---------------------------- */
-        students_table.on('click', '.delete_student', function() {
+        teacher_table.on('click', '.delete_teacher', function() {
             const row = $(this).closest('tr');
-            const showtd = students_table.row(row).data();
+            const showtd = teacher_table.row(row).data();
 
 
             $.ajax({
-                url: '<?= base_url() ?>Student/delete_student',
+                url: '<?= base_url() ?>Teachers/delete_teacher',
                 method: 'POST',
                 dataType: 'JSON',
                 data: {
-                    student_id: showtd.student_id
+                    teacher_id: showtd.teacher_id
                 },
                 success: function(res) {
                     if (res.Resp_code === 'RCS') {
                         toastr.info(res.Resp_desc)
-                        students_table.ajax.reload()
+                        teacher_table.ajax.reload()
                     } else if (res.Resp_code === 'RLD') {
                         window.location.reload();
                     } else {

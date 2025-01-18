@@ -58,7 +58,7 @@ class General_model extends CI_Model
         $table = '';
         if ($role_id == '1') {
             $table = 'users';
-            $this->db->where($table . '.id', $user_id);
+            $this->db->where($table . '.user_id', $user_id);
         } else if ($role_id == '2') {
             $table = 'teacher';
             $this->db->where($table . '.teacher_id', $user_id);
@@ -74,5 +74,49 @@ class General_model extends CI_Model
         } else {
             return false;
         }
+    }
+
+    public function get_all_users($email , $mobile, $role_id){
+
+        $table = '';
+
+        if ($role_id == '1') {
+            $table = 'users';
+            $id = 'user_id';
+        } 
+        
+        else if ($role_id == '2') {
+            $table = 'teacher';
+            $id = 'teacher_id';
+        } 
+        
+        else if ($role_id == '3') {
+
+            $table = 'student';
+            $id = 'student_id';
+
+        }
+
+        $user_data = $this->db->select('email, mobile, '. $id)
+        ->where('email', $email)
+        ->or_where('mobile', $mobile)
+        ->get($table)
+        ->result_array();
+
+        if($user_data){
+            return $user_data;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public function check_account_number_existence($account_number){
+        
+        $this->db->select('account_number, teacher_id');
+        $this->db->where('account_number', $account_number);
+        $res = $this->db->get('teacher')->row_array();
+
+        return $res;
     }
 }
