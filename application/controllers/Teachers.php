@@ -126,8 +126,8 @@ class Teachers extends CI_Controller
 		exit(json_encode($data));
 	}
 
-	/* ------------------------ Function to Edit Student ------------------------ */
-	public function edit_student()
+	/* ------------------------ Function to Edit Teacher ------------------------ */
+	public function edit_teacher()
 	{
 		$session = $this->session->userdata('cms_session');
 		if (!$session) {
@@ -140,29 +140,48 @@ class Teachers extends CI_Controller
 
 		$params = $this->input->post();
 
-		if (isset($params['student_id']) && ctype_digit($params['student_id'])) {
+		$email = $params['email'];
+		$mobile = $params['mobile'];
+		$account_number = $params['account_number'];
+		$teacher_id = $params['teacher_id'];
+		/* ------------------ check for email and mobile existence ------------------ */
+		$all_users = $this->general_md->get_all_users($email, $mobile ,2); 
 
-			$get_student = $this->students_md->get_students($params['student_id']);
+		//dd($all_users);
+		// if($all_users[0]['teacher_id'] === $params['teacher_id']){}
 
-		//dd($params);
+		if(empty($all_users) || $all_users[0]['teacher_id'] === $params['teacher_id']){
+			/* ------------------ check for account number existence ------------------ */
+		$macthed_account_number = $this->general_md->check_account_number_existence($account_number);
 
-			if (is_array($get_student) && count($get_student)) {
+		if(empty($macthed_account_number) || $macthed_account_number['teacher_id'] === $params['teacher_id']){
+
+		if (isset($params['teacher_id']) && ctype_digit($params['teacher_id'])) {
+
+			$get_teacher = $this->teacher_md->get_teacher($params['teacher_id']);
+
+		//dd($get_teacher);
+
+			if (is_array($get_teacher) && count($get_teacher)) {
 
 				$update_array = [
-					'student_name' => $params['student_name'],
-					'email' => $params['email'],
-					'mobile' => $params['mobile'],
-					'address' => $params['address'],
-					'father_name' => $params['father_name'],
-					'mother_name' => $params['mother_name'],
-					'course' => $params['course_id'], // update course id on studnet table
-					'student_id' => $params['student_id'],
-					'account_status' => $params['account_status']
+							'name' => $params['teacher_name'],
+							'email' => $params['email'],
+							'mobile' => $params['mobile'],
+							'address' => $params['address'],
+							'courses' => $params['course_id'],
+							'salary' => $params['salary'],
+							'bank_name' => $params['bank_name'],
+							'account_holder_name' => $params['account_holder_name'],
+							'ifsc_code' => $params['ifsc_code'],
+							'account_number' => $params['account_number'],
+							'teacher_id' => $params['teacher_id'],
+							'account_status' => $params['account_status']
 				];
 
-				if ($this->students_md->update_student($update_array)) {
+				if ($this->teacher_md->update_teacher($update_array)) {
 					$data['Resp_code'] = 'RCS';
-					$data['Resp_desc'] = 'Student Updated Successfully';
+					$data['Resp_desc'] = 'Teacher Updated Successfully';
 					$data['data'] = [];
 				} else {
 					$data['Resp_code'] = 'ERR';
@@ -171,13 +190,29 @@ class Teachers extends CI_Controller
 				}
 			} else {
 				$data['Resp_code'] = 'ERR';
-				$data['Resp_desc'] = 'Student Data Not Found';
+				$data['Resp_desc'] = 'Teacher Data Not Found';
 				$data['data'] = [];
 			}
 		} else {
 			$data['Resp_code'] = 'ERR';
-			$data['Resp_desc'] = 'Invalid Student';
+			$data['Resp_desc'] = 'Invalid Teacher';
 			$data['data'] = [];
+		}
+	}
+
+	else{
+		$data['Resp_code'] = 'ERR';
+		$data['Resp_desc'] = 'Account Number Already exist';
+		$data['data'] = [];
+	}
+
+	}
+
+		else{
+			$data['Resp_code'] = 'ERR';
+			$data['Resp_desc'] = 'Email and Mobile Already Exist !';
+			$data['data'] = [];
+			
 		}
 
 		exit(json_encode($data));
@@ -185,7 +220,7 @@ class Teachers extends CI_Controller
 
 	/* ----------------------- Function to Delete Student ----------------------- */
 
-	public function delete_student()
+	public function delete_teacher()
 	{
 		$session = $this->session->userdata('cms_session');
 		if (!$session) {
@@ -198,15 +233,15 @@ class Teachers extends CI_Controller
 
 		$params = $this->input->post();
 
-		if (isset($params['student_id']) && ctype_digit($params['student_id'])) {
+		if (isset($params['teacher_id']) && ctype_digit($params['teacher_id'])) {
 
-			$get_student = $this->students_md->get_students($params['student_id']);
+			$get_teacher = $this->teacher_md->get_teacher($params['teacher_id']);
 
-			if (is_array($get_student) && count($get_student)) {
+			if (is_array($get_teacher) && count($get_teacher)) {
 
-				if ($this->students_md->delete_student($params['student_id'])) {
+				if ($this->teacher_md->delete_teacher($params['teacher_id'])) {
 					$data['Resp_code'] = 'RCS';
-					$data['Resp_desc'] = 'Student Deleted Successfully';
+					$data['Resp_desc'] = 'Teacher Deleted Successfully';
 					$data['data'] = [];
 				} else {
 					$data['Resp_code'] = 'ERR';
@@ -215,12 +250,12 @@ class Teachers extends CI_Controller
 				}
 			} else {
 				$data['Resp_code'] = 'ERR';
-				$data['Resp_desc'] = 'Student Data Not Found';
+				$data['Resp_desc'] = 'Teacher Data Not Found';
 				$data['data'] = [];
 			}
 		} else {
 			$data['Resp_code'] = 'ERR';
-			$data['Resp_desc'] = 'Invalid Student';
+			$data['Resp_desc'] = 'Invalid Teacher';
 			$data['data'] = [];
 		}
 

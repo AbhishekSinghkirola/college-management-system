@@ -82,13 +82,22 @@ class General_model extends CI_Model
 
         if ($role_id == '1') {
             $table = 'users';
-        } else if ($role_id == '2') {
+            $id = 'user_id';
+        } 
+        
+        else if ($role_id == '2') {
             $table = 'teacher';
-        } else if ($role_id == '3') {
+            $id = 'teacher_id';
+        } 
+        
+        else if ($role_id == '3') {
+
             $table = 'student';
+            $id = 'student_id';
+
         }
 
-        $user_data = $this->db->select('email, mobile')
+        $user_data = $this->db->select('email, mobile, '. $id)
         ->where('email', $email)
         ->or_where('mobile', $mobile)
         ->get($table)
@@ -104,7 +113,7 @@ class General_model extends CI_Model
 
     public function check_account_number_existence($account_number){
         
-        $this->db->select('account_number');
+        $this->db->select('account_number, teacher_id');
         $this->db->where('account_number', $account_number);
         $res = $this->db->get('teacher')->row_array();
 
