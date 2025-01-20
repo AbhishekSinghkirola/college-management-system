@@ -8,7 +8,6 @@ class Student extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model('Students_model', 'students_md');
-		
 	}
 
 	public function index()
@@ -24,19 +23,19 @@ class Student extends CI_Controller
 	}
 
 	/* ------------------------- Function to Get Student ------------------------ */
-	public function get_students(){
+	public function get_students()
+	{
 		$session = $this->session->userdata('cms_session');
-		if(!$session){
+		if (!$session) {
 			$this->session->sess_destroy();
 			exit(json_encode(['Resp_code' => 'RLD', 'Resp_desc' => 'Session Destroyed']));
-
 		}
 
 		$data = [];
 		$students = $this->students_md->get_students();
 
 		$data['Resp_code'] = 'RCS';
-		$data['Resp_desc'] = 'Students Fetched Successfully'; 
+		$data['Resp_desc'] = 'Students Fetched Successfully';
 		$data['data'] = is_array($students) ? $students : [];
 
 		exit(json_encode($data));
@@ -63,53 +62,49 @@ class Student extends CI_Controller
 		$email = $params['email'];
 		$mobile = $params['mobile'];
 
-		
-		$all_users = $this->general_md->get_all_users($email, $mobile,3); 
 
-		if(empty($all_users)){
-				
-				if (validate_field(@$params['student_name'], 'strname')) {
+		$all_users = $this->general_md->get_all_users($email, $mobile, 3);
 
-					$insert_data = [
-						'student_name' => $params['student_name'],
-						'email' => $params['email'],
-						'password' => $password,
-						'mobile' => $params['mobile'],
-						'address' => $params['address'],
-						'father_name' => $params['father_name'],
-						'mother_name' => $params['mother_name'],
-						'course' => $params['course_name'],
-						'created_on' => date('Y-m-d H:i:s'),
-						'role_id' => $role_id,
-						'account_status' => $account_status,
-		
-					];
-		
-		
-					if ($this->students_md->add_students($insert_data)) {
-						$data['Resp_code'] = 'RCS';
-						$data['Resp_desc'] = 'Student Added successfully';
-						$data['data'] = [];
-					} else {
-						$data['Resp_code'] = 'ERR';
-						$data['Resp_desc'] = 'Internal Processing Error';
-						$data['data'] = [];
-					}
-		
-					
+		if (empty($all_users)) {
+
+			if (validate_field(@$params['student_name'], 'strname')) {
+
+				$insert_data = [
+					'student_name' => $params['student_name'],
+					'email' => $params['email'],
+					'password' => $password,
+					'mobile' => $params['mobile'],
+					'address' => $params['address'],
+					'father_name' => $params['father_name'],
+					'mother_name' => $params['mother_name'],
+					'course' => $params['course_name'],
+					'created_on' => date('Y-m-d H:i:s'),
+					'role_id' => $role_id,
+					'account_status' => $account_status,
+
+				];
+
+
+				if ($this->students_md->add_students($insert_data)) {
+					$data['Resp_code'] = 'RCS';
+					$data['Resp_desc'] = 'Student Added successfully';
+					$data['data'] = [];
 				} else {
 					$data['Resp_code'] = 'ERR';
-					$data['Resp_desc'] = 'Invalid Student Name';
+					$data['Resp_desc'] = 'Internal Processing Error';
 					$data['data'] = [];
 				}
-			}
-			else{
+			} else {
 				$data['Resp_code'] = 'ERR';
-				$data['Resp_desc'] = 'Email  or Mobile Already Exist !';
+				$data['Resp_desc'] = 'Invalid Student Name';
 				$data['data'] = [];
-				
 			}
-		
+		} else {
+			$data['Resp_code'] = 'ERR';
+			$data['Resp_desc'] = 'Email  or Mobile Already Exist !';
+			$data['data'] = [];
+		}
+
 		exit(json_encode($data));
 	}
 
@@ -131,7 +126,7 @@ class Student extends CI_Controller
 
 			$get_student = $this->students_md->get_students($params['student_id']);
 
-		//dd($params);
+			//dd($params);
 
 			if (is_array($get_student) && count($get_student)) {
 
@@ -225,5 +220,39 @@ class Student extends CI_Controller
 		$this->load->view('template/header');
 		$this->load->view('student/pending_students');
 		$this->load->view('template/footer');
+	}
+
+	/* ---------------- Function To get student today attendance ---------------- */
+	public function today_attendance()
+	{
+		$session = $this->session->userdata('cms_session');
+		if (!$session) {
+			$this->session->sess_destroy();
+			redirect('login');
+		}
+
+		$this->load->view('template/header');
+		$this->load->view('student/today_attendance');
+		$this->load->view('template/footer');
+	}
+
+	public function student_today_attendance()
+	{
+		$session = $this->session->userdata('cms_session');
+		if (!$session) {
+			$this->session->sess_destroy();
+
+			exit(json_encode(['Resp_code' => 'RLD', 'Resp_desc' => 'Session Destroyed']));
+		}
+
+		$data = [];
+
+		$today_date = date('Y-m-d');
+		$attendance = $this->students_md->get_today_attendance($today_date);
+		$data['Resp_code'] = 'RCS';
+		$data['Resp_desc'] = 'Attendance fetched successfully.';
+		$data['data'] = is_array($attendance) ? $attendance : [];
+
+		exit(json_encode($data));
 	}
 }

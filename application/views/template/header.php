@@ -134,18 +134,13 @@ $user = get_logged_in_user();
                             </a>
                             <ul class="menu-sub">
                                 <li class="menu-item">
-                                    <a href="<?= base_url() ?>Student/pending_registration" class="menu-link">
-                                        <div data-i18n="Account">Pending Registration</div>
-                                    </a>
-                                </li>
-                                <li class="menu-item">
                                     <a href="<?= base_url() ?>Student" class="menu-link">
                                         <div data-i18n="Notifications">Students</div>
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="pages-account-settings-connections.html" class="menu-link">
-                                        <div data-i18n="Connections">Promotion Student</div>
+                                    <a href="<?= base_url() ?>Student/today_attendance" class="menu-link">
+                                        <div data-i18n="Connections">Today Attendance</div>
                                     </a>
                                 </li>
                             </ul>
