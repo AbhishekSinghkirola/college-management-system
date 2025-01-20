@@ -1,13 +1,13 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Teachers extends CI_Controller
+class Fees extends CI_Controller
 {
 
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('Teachers_model', 'teacher_md');
+		$this->load->model('Fees_model', 'fees_md');
 		
 	}
 
@@ -19,12 +19,12 @@ class Teachers extends CI_Controller
 			redirect('login');
 		}
 		$this->load->view('template/header');
-		$this->load->view('teacher/teachers');
+		$this->load->view('fees/pending_fees');
 		$this->load->view('template/footer');
 	}
 
-	/* ------------------------- Function to Get Teacher ------------------------ */
-	public function get_teacher(){
+	/* ------------------------- Function to Get Pending Fees ------------------------ */
+	public function get_pending_fees(){
 		$session = $this->session->userdata('cms_session');
 		if(!$session){
 			$this->session->sess_destroy();
@@ -32,7 +32,25 @@ class Teachers extends CI_Controller
 		}
 
 		$data = [];
-		$teachers = $this->teacher_md->get_teacher();
+		$all_student_fees = $this->fees_md->get_all_student_fees();
+
+		$current_year_month = date('Y-m');
+		$current_date = date('Y-m');
+		
+
+		// foreach($all_student_fees as $student_fees){
+
+		// 	$day_name = date('d', strtotime($student_fees['created_on']));
+		// 	$student_id = $student_fees['student_id'];
+
+		// 	$fees_pay_date = $current_year_month . "-" .$day_name;
+
+		// 	$pending_fees = $this->fees_md->get_pending_fees($fees_pay_date,$student_id);
+
+		// 	dd($pending_fees);
+
+
+		// }
 
 		$data['Resp_code'] = 'RCS';
 		$data['Resp_desc'] = 'Teachers Fetched Successfully'; 
@@ -92,7 +110,7 @@ class Teachers extends CI_Controller
 						];
 			
 			
-						if ($this->teacher_md->add_teacher($insert_data)) {
+						if ($this->fees_md->add_teacher($insert_data)) {
 							$data['Resp_code'] = 'RCS';
 							$data['Resp_desc'] = 'Teacher Added successfully';
 							$data['data'] = [];
@@ -158,7 +176,7 @@ class Teachers extends CI_Controller
 
 		if (isset($params['teacher_id']) && ctype_digit($params['teacher_id'])) {
 
-			$get_teacher = $this->teacher_md->get_teacher($params['teacher_id']);
+			$get_teacher = $this->fees_md->get_teacher($params['teacher_id']);
 
 		//dd($get_teacher);
 
@@ -179,7 +197,7 @@ class Teachers extends CI_Controller
 							'account_status' => $params['account_status']
 				];
 
-				if ($this->teacher_md->update_teacher($update_array)) {
+				if ($this->fees_md->update_teacher($update_array)) {
 					$data['Resp_code'] = 'RCS';
 					$data['Resp_desc'] = 'Teacher Updated Successfully';
 					$data['data'] = [];
@@ -235,11 +253,11 @@ class Teachers extends CI_Controller
 
 		if (isset($params['teacher_id']) && ctype_digit($params['teacher_id'])) {
 
-			$get_teacher = $this->teacher_md->get_teacher($params['teacher_id']);
+			$get_teacher = $this->fees_md->get_teacher($params['teacher_id']);
 
 			if (is_array($get_teacher) && count($get_teacher)) {
 
-				if ($this->teacher_md->delete_teacher($params['teacher_id'])) {
+				if ($this->fees_md->delete_teacher($params['teacher_id'])) {
 					$data['Resp_code'] = 'RCS';
 					$data['Resp_desc'] = 'Teacher Deleted Successfully';
 					$data['data'] = [];

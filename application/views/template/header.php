@@ -219,6 +219,22 @@ $user = get_logged_in_user();
                     </li>
 
 
+                    <!-- manage Fees  -->
+
+                    <li class="menu-item">
+                        <a href="javascript:void(0);" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-dock-top"></i>
+                            <div data-i18n="Account Settings">Fees Management</div>
+                        </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item">
+                                <a href="<?= base_url() ?>Fees" class="menu-link">
+                                    <div data-i18n="Notifications">Pending Fees</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
                 </ul>
             </aside>
             <!-- / Menu -->
