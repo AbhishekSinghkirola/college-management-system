@@ -4,15 +4,18 @@ date_default_timezone_set('Asia/Kolkata');
 
 class Fees_model extends CI_Model
 {
-    public function add_teacher($insert_data)
+    public function pay_pending_fees($insert_data)
     {
-        return $this->db->insert('teacher', $insert_data);
+        return $this->db->insert('student_fees', $insert_data);
     }
 
     public function get_all_student_fees($student_id = null)
     {
-        $this->db->select('student_id,student_name,email,created_on');
+        $this->db->select('student_id,student_name,email,created_on,courses.fees,courses.course_name');
         $this->db->from('student');
+
+        $this->db->join('courses','courses.id = student.course');
+
         $res = $this->db->get()->result_array();
 
         if ($res) {
@@ -26,8 +29,10 @@ class Fees_model extends CI_Model
         $this->db->select('*');
         $this->db->from('student_fees');
         $this->db->where('student_id',$student_id);
+        $this->db->where('DATE(paid_date) >= ',$fees_pay_date);
+        // if there is data so the student has already paid the fees
 
-        $res = $this->db->get()->result_array();
+        $res = $this->db->get()->row_array();
 
         if ($res) {
             return $res;

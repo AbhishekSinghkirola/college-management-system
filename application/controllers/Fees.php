@@ -35,33 +35,35 @@ class Fees extends CI_Controller
 		$all_student_fees = $this->fees_md->get_all_student_fees();
 
 		$current_year_month = date('Y-m');
-		$current_date = date('Y-m');
-		
 
-		// foreach($all_student_fees as $student_fees){
+		$result = [];
 
-		// 	$day_name = date('d', strtotime($student_fees['created_on']));
-		// 	$student_id = $student_fees['student_id'];
+		foreach($all_student_fees as $student_fees){
 
-		// 	$fees_pay_date = $current_year_month . "-" .$day_name;
+			$day_name = date('d', strtotime($student_fees['created_on']));
+			$fees_pay_date = $current_year_month . "-" .$day_name;
 
-		// 	$pending_fees = $this->fees_md->get_pending_fees($fees_pay_date,$student_id);
+			$student_id = $student_fees['student_id'];
 
-		// 	dd($pending_fees);
+			$pending_fees = $this->fees_md->get_pending_fees($fees_pay_date,$student_id);
 
+			 if(empty($pending_fees)){
 
-		// }
-
+				$student_fees['due_date'] = $fees_pay_date;
+				$result[] = $student_fees;
+			 }
+		}
+		//dd($result);
 		$data['Resp_code'] = 'RCS';
-		$data['Resp_desc'] = 'Teachers Fetched Successfully'; 
-		$data['data'] = is_array($teachers) ? $teachers : [];
+		$data['Resp_desc'] = 'Pending Fees Student Fetched Successfully'; 
+		$data['data'] = is_array($result) ? $result : [];
 
 		exit(json_encode($data));
 	}
 
 
 	/* -------------------------- Function to Add New Teacher -------------------------- */
-	public function add_teacher()
+	public function pay_pending_fees()
 	{
 		$session = $this->session->userdata('cms_session');
 		if (!$session) {
@@ -71,48 +73,20 @@ class Fees extends CI_Controller
 		}
 
 		$data = [];
-
-		$password = md5('welcome@123');
-		$role_id = 2;
-		$account_status = 'ACTIVE';
-
 		$params = $this->input->post();
-		$email = $params['email'];
-		$mobile = $params['mobile'];
-		$account_number = $params['account_number'];
 
-		/* ------------------ check for email and mobile existence ------------------ */
-		$all_users = $this->general_md->get_all_users($email, $mobile ,2); 
-
-		if(empty($all_users)){
-
-		/* ------------------ check for account number existence ------------------ */
-		$macthed_account_number = $this->general_md->check_account_number_existence($account_number);
-
-				if(empty($macthed_account_number)){
-					if (validate_field(@$params['teacher_name'], 'strname')) {
+					if (validate_field(@$params['student_name'], 'strname')) {
 
 						$insert_data = [
-							'name' => $params['teacher_name'],
-							'email' => $params['email'],
-							'password' => $password,
-							'mobile' => $params['mobile'],
-							'address' => $params['address'],
-							'courses' => $params['course_name'],
-							'salary' => $params['salary'],
-							'bank_name' => $params['bank_name'],
-							'account_holder_name' => $params['account_holder_name'],
-							'ifsc_code' => $params['ifsc_code'],
-							'account_number' => $params['account_number'],
-							'created_on' => date('Y-m-d H:i:s'),
-							'role_id' => $role_id,
-							'account_status' => $account_status,
+							'student_id' => $params['student_id'],
+							'fees_amount' => $params['fees_amount'],
+							'paid_date' => date('Y-m-d H:i:s'),
 						];
 			
 			
-						if ($this->fees_md->add_teacher($insert_data)) {
+						if ($this->fees_md->pay_pending_fees($insert_data)) {
 							$data['Resp_code'] = 'RCS';
-							$data['Resp_desc'] = 'Teacher Added successfully';
+							$data['Resp_desc'] = 'Fees Paid successfully';
 							$data['data'] = [];
 						} else {
 							$data['Resp_code'] = 'ERR';
@@ -123,23 +97,9 @@ class Fees extends CI_Controller
 						
 					} else {
 						$data['Resp_code'] = 'ERR';
-						$data['Resp_desc'] = 'Invalid Teacher Name';
+						$data['Resp_desc'] = 'Invalid Student Name';
 						$data['data'] = [];
 					}
-				}
-				else{
-					$data['Resp_code'] = 'ERR';
-					$data['Resp_desc'] = 'Account Number Already exist';
-					$data['data'] = [];
-				}
-
-			}
-			else{
-				$data['Resp_code'] = 'ERR';
-				$data['Resp_desc'] = 'Email and Mobile Already Exist !';
-				$data['data'] = [];
-				
-			}
 		
 		exit(json_encode($data));
 	}
