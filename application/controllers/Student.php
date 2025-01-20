@@ -60,10 +60,13 @@ class Student extends CI_Controller
 
 		$params = $this->input->post();
 
-		$all_students = $this->students_md->get_students();
+		$email = $params['email'];
+		$mobile = $params['mobile'];
 
-		foreach($all_students as $student){
-			if($student['mobile'] !== $params['mobile']){
+		
+		$all_users = $this->general_md->get_all_users($email, $mobile,3); 
+
+		if(empty($all_users)){
 				
 				if (validate_field(@$params['student_name'], 'strname')) {
 
@@ -102,11 +105,11 @@ class Student extends CI_Controller
 			}
 			else{
 				$data['Resp_code'] = 'ERR';
-				$data['Resp_desc'] = 'Mobile Number Already Exist !';
+				$data['Resp_desc'] = 'Email  or Mobile Already Exist !';
 				$data['data'] = [];
 				
 			}
-		}
+		
 		exit(json_encode($data));
 	}
 

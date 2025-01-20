@@ -168,3 +168,15 @@ if (!function_exists(('get_logged_in_user'))) {
         return $user;
     }
 }
+
+/* -------------------------- Sorting Dates In Desc ------------------------- */
+function compareByTimeStamp($time1, $time2)
+{
+    if (strtotime($time1) < strtotime($time2)) {
+        return 1;
+    } elseif (strtotime($time1) > strtotime($time2)) {
+        return -1;
+    } else {
+        return 0;
+    }
+}

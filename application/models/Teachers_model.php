@@ -24,21 +24,21 @@ class Teachers_model extends CI_Model
         }
     }
 
-    public function update_student($update_array)
+    public function update_teacher($update_array)
     {
 
-        $id = $update_array['student_id'];
+        $id = $update_array['teacher_id'];
 
         if ($id) {
-            unset($update_array['student_id']);
-            return $this->db->update('student', $update_array, ['student_id' => $id]);
+            unset($update_array['teacher_id']);
+            return $this->db->update('teacher', $update_array, ['teacher_id' => $id]);
         }
     }
 
-    public function delete_student($student_id)
+    public function delete_teacher($teacher_id)
     {
-        if ($student_id) {
-            return $this->db->delete('student', ['student_id' => $student_id]);
+        if ($teacher_id) {
+            return $this->db->delete('teacher', ['teacher_id' => $teacher_id]);
         }
     }
      
