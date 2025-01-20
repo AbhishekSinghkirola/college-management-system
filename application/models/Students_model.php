@@ -12,7 +12,7 @@ class Students_model extends CI_Model
     public function get_students($student_id = null)
     {
         $this->db->from('student');
-        $this->db->join('courses','student.course=courses.id');
+        $this->db->join('courses', 'student.course=courses.id');
         $this->db->join('category', 'courses.course_category=category.category_id');
 
 
@@ -44,5 +44,15 @@ class Students_model extends CI_Model
             return $this->db->delete('student', ['student_id' => $student_id]);
         }
     }
-     
+
+    public function get_today_attendance($date)
+    {
+        $this->db->select('s.*, COALESCE(sa.status, "PENDING") as status');
+        $this->db->from('student s');
+        $this->db->join('student_attendance sa', 's.student_id = sa.student_id and DATE(sa.date)="' . $date . '"', 'left');
+        $query = $this->db->get();
+        $res = $query->result_array();
+
+        return $res;
+    }
 }
