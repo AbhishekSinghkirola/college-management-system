@@ -14,6 +14,10 @@ class Fees_model extends CI_Model
         $this->db->select('student_id,student_name,email,created_on,courses.fees,courses.course_name');
         $this->db->from('student');
 
+        if($student_id){
+            $this->db->where('student_id', $student_id);
+        }
+
         $this->db->join('courses','courses.id = student.course');
 
         $res = $this->db->get()->result_array();
@@ -24,15 +28,27 @@ class Fees_model extends CI_Model
     }
 
 
-    public function get_pending_fees($fees_pay_date, $student_id)
+    public function get_pending_fees($fees_pay_date, $student_id, $role_id = null)
     {
         $this->db->select('*');
         $this->db->from('student_fees');
         $this->db->where('student_id',$student_id);
-        $this->db->where('DATE(paid_date) >= ',$fees_pay_date);
+    
+        if($role_id == '1'){
+
+            $this->db->where('DATE(paid_date) >= ',$fees_pay_date);
+            // 2025-01-22 >= 2025-01-29
+            // 2024-12-18
+        }
+
+        if($role_id == '3') {
+
+            $this->db->where('DATE(paid_date) <= ',$fees_pay_date);
+        }
         // if there is data so the student has already paid the fees
 
-        $res = $this->db->get()->row_array();
+
+        $res = $this->db->get()->result_array();
 
         if ($res) {
             return $res;
@@ -40,22 +56,21 @@ class Fees_model extends CI_Model
     }
 
 
-    public function update_teacher($update_array)
-    {
+    public function get_pending_fees_for_student($fees_pay_date, $student_id){
 
-        $id = $update_array['teacher_id'];
+        $this->db->select('*');
+        $this->db->from('student_fees');
+        $this->db->where('student_id',$student_id);
 
-        if ($id) {
-            unset($update_array['teacher_id']);
-            return $this->db->update('teacher', $update_array, ['teacher_id' => $id]);
+        $this->db->where('DATE(paid_date) >= ',$fees_pay_date);
+
+        $res = $this->db->get()->result_array();
+
+        if ($res) {
+            return $res;
         }
+    
     }
 
-    public function delete_teacher($teacher_id)
-    {
-        if ($teacher_id) {
-            return $this->db->delete('teacher', ['teacher_id' => $teacher_id]);
-        }
-    }
      
 }

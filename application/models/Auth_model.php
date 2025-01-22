@@ -23,6 +23,8 @@ class Auth_model extends CI_Model
 
             if ($table) {
                 $res = $this->db->get_where($table, ['mobile' => $mobile, 'password' => $password, 'account_status' => 'ACTIVE'])->row_array();
+
+                
                 if ($res) return $res;
             }
         }

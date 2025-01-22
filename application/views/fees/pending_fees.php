@@ -4,7 +4,7 @@ $courses = get_courses();
 
 <div class="card" id="first_screen">
     <div class="d-flex justify-content-between align-items-center pe-4">
-        <h5 class="card-header">Manage Student Fees</h5>
+        <h5 class="card-header">Manage Pending Student Fees</h5>
        
     </div>
     <div class="card-body">

@@ -196,8 +196,16 @@ $user = get_logged_in_user();
                                 <div data-i18n="Analytics">Attendance</div>
                             </a>
                         </li>
+
+                        <li class="menu-item">
+                            <a href="<?= base_url() ?>Fees/paid_fees" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                                    <div data-i18n="Notifications">Pending Fees</div>
+                            </a>
+                        </li>
                     <?php endif; ?>
 
+                    <?php if($user['role_type'] == 'ADMIN'): ?>
                     <!-- Manage Teachers  -->
                     <li class="menu-item">
                         <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -212,10 +220,11 @@ $user = get_logged_in_user();
                             </li>
                         </ul>
                     </li>
+                    <?php endif; ?>
 
+                    <?php if($user['role_type'] == 'ADMIN'): ?>
 
                     <!-- manage Fees  -->
-
                     <li class="menu-item">
                         <a href="javascript:void(0);" class="menu-link menu-toggle">
                             <i class="menu-icon tf-icons bx bx-dock-top"></i>
@@ -229,6 +238,10 @@ $user = get_logged_in_user();
                             </li>
                         </ul>
                     </li>
+                    <?php endif; ?>
+
+
+                   
 
                 </ul>
             </aside>
@@ -254,6 +267,8 @@ $user = get_logged_in_user();
                             </div>
                         </div>
                         <!-- /Search -->
+
+
 
                         <ul class="navbar-nav flex-row align-items-center ms-auto">
                             <!-- Place this tag where you want the button to render. -->
@@ -322,12 +337,11 @@ $user = get_logged_in_user();
                             <!--/ User -->
                         </ul>
                     </div>
+
                 </nav>
 
                 <!-- / Navbar -->
-
                 <!-- Content wrapper -->
                 <div class="content-wrapper">
                     <!-- Content -->
-
                     <div class="container-xxl flex-grow-1 container-p-y">
