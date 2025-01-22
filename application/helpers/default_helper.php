@@ -158,6 +158,7 @@ if (!function_exists(('get_content'))) {
 
 /* --------------------- Function to get logged in user --------------------- */
 if (!function_exists(('get_logged_in_user'))) {
+
     function get_logged_in_user()
     {
         $CI = &get_instance();
@@ -167,6 +168,7 @@ if (!function_exists(('get_logged_in_user'))) {
 
         return $user;
     }
+    
 }
 
 /* -------------------------- Sorting Dates In Desc ------------------------- */
