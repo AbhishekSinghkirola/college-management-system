@@ -263,4 +263,58 @@ class Teachers extends CI_Controller
 	}
 
 
+	/* ---------------------------- Salary Management --------------------------- */
+	
+	/* ------------------ Function to show pendding salary list ----------------- */
+	public function pending_salary()
+	{
+		$session = $this->session->userdata('cms_session');
+		if (!$session) {
+			$this->session->sess_destroy();
+			redirect('login');
+		}
+		$this->load->view('template/header');
+		$this->load->view('teacher/teacher_salary');
+		$this->load->view('template/footer');
+	}
+
+	public function get_pending_salary_list(){
+
+		$session = $this->session->userdata('cms_session');
+		if(!$session){
+			$this->session->sess_destroy();
+			exit(json_encode(['Resp_code' => 'RLD', 'Resp_desc' => 'Session Destroyed']));
+		}
+
+		$data = [];
+
+		$teachers_list = $this->teacher_md->get_teacher();
+
+		$current_year_month = date('Y-m');
+		
+		foreach($teachers_list as $teacher){
+
+		$day_name = date('d', strtotime($teacher['created_on']));
+		$salary_pay_date = $current_year_month . "-" .$day_name;
+
+		$teacher_id = $teacher['teacher_id']; 
+
+		$get_pending_salary_list = $this->teacher_md->pending_salary($salary_pay_date, $teacher_id);
+
+
+		if(empty($get_pending_salary_list)){
+
+			$teacher['due_date'] = $salary_pay_date;
+			$result[] = $teacher;
+		}
+
+		}
+
+		$data['Resp_code'] = 'RCS';
+		$data['Resp_desc'] = 'Pending Salary Fetched Successfully'; 
+		$data['data'] = is_array($result) ? $result : [];
+
+		exit(json_encode($data));
+
+	}
 }

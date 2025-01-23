@@ -41,5 +41,21 @@ class Teachers_model extends CI_Model
             return $this->db->delete('teacher', ['teacher_id' => $teacher_id]);
         }
     }
+
+    public function pending_salary($salary_pay_date, $teacher_id, $role_id = null){
+        $this->db->select('*');
+        $this->db->from('teacher_fees');
+        $this->db->where('teacher_id' , $teacher_id);
+
+        $this->db->where('DATE(paid_date) >= ', $salary_pay_date);
+
+       $res =  $this->db->get()->result_array();
+
+       if($res){
+            return $res;
+       }
+
+
+    }
      
 }
