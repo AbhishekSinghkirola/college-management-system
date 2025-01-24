@@ -287,6 +287,7 @@ class Teachers extends CI_Controller
 		}
 
 		$data = [];
+		$result = [];
 
 		$teachers_list = $this->teacher_md->get_teacher();
 
@@ -317,4 +318,76 @@ class Teachers extends CI_Controller
 		exit(json_encode($data));
 
 	}
+
+	/* -------------------------- Function to Pay Salary -------------------- */
+	public function pay_pending_salary()
+	{
+		$session = $this->session->userdata('cms_session');
+		if (!$session) {
+			$this->session->sess_destroy();
+
+			exit(json_encode(['Resp_code' => 'RLD', 'Resp_desc' => 'Session Destroyed']));
+		}
+
+		$data = [];
+		$params = $this->input->post();
+
+					if (validate_field(@$params['teacher_name'], 'strname')) {
+
+						$insert_data = [
+							'teacher_id' => $params['teacher_id'],
+							'salary_amount' => $params['salary_amount'],
+							'paid_date' => date('Y-m-d H:i:s'),
+						];
+			
+			
+						if ($this->teacher_md->pay_pending_salary($insert_data)) {
+							$data['Resp_code'] = 'RCS';
+							$data['Resp_desc'] = 'Salary Paid successfully';
+							$data['data'] = [];
+						} else {
+							$data['Resp_code'] = 'ERR';
+							$data['Resp_desc'] = 'Internal Processing Error';
+							$data['data'] = [];
+						}
+			
+						
+					} else {
+						$data['Resp_code'] = 'ERR';
+						$data['Resp_desc'] = 'Invalid Student Name';
+						$data['data'] = [];
+					}
+		
+					
+		exit(json_encode($data));
+	}
+
+	public function recived_salary(){
+		
+		$this->load->view('template/header');
+		$this->load->view('teacher/recived_salary');
+		$this->load->view('template/footer');
+	}
+
+	public function recived_salary_list(){
+		
+		$session = $this->session->userdata('cms_session');
+		if(!$session){
+			$this->session->sess_destroy();
+			exit(json_encode(['Resp_code' => 'RLD', 'Resp_desc' => 'Session Destroyed']));
+		}
+
+		$data = [];
+
+		$user = get_logged_in_user();	
+
+		$recive_salary_list = $this->teacher_md->get_all_salary_list($user['teacher_id']);
+
+		$data['Resp_code'] = 'RCS';
+		$data['Resp_desc'] = 'List Fetched Successfully';
+		$data['data'] = is_array($recive_salary_list) ? $recive_salary_list : [];
+		exit(json_encode($data));
+
+	}
+
 }

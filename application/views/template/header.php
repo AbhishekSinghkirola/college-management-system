@@ -179,6 +179,17 @@ $user = get_logged_in_user();
                         </li>
 
                     <?php endif; ?>
+                    <?php if($user['role_type'] == 'EMP') : ?>
+
+                                <li class="menu-item">
+                                    <a href="<?= base_url() ?>Teachers/recived_salary" class="menu-link">
+                                         <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                                        <div data-i18n="Notifications">Recived Salary</div>
+                                    </a>
+                                </li>
+                                
+                    <?php endif; ?>
+
 
                     <?php if ($user['role_type'] === 'USER'): ?>
                         <!-- Courses  -->
@@ -221,7 +232,7 @@ $user = get_logged_in_user();
 
                             <li class="menu-item">
                                 <a href="<?= base_url() ?>Teachers/pending_salary" class="menu-link">
-                                    <div data-i18n="Notifications">Teacher Salary</div>
+                                    <div data-i18n="Notifications">Pending Salary</div>
                                 </a>
                             </li>
                         </ul>

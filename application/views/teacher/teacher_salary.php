@@ -122,8 +122,8 @@
                 <div class="card-body">
                 <div class="row">
                     <div class="col-6 mb-6">
-                        <label class="form-label" for="student_name">Student Name</label>
-                        <input type="text" class="form-control" id="student_name" value="${showtd.name}" autofocus readonly>
+                        <label class="form-label" for="teacher_name">Student Name</label>
+                        <input type="text" class="form-control" id="teacher_name" value="${showtd.name}" autofocus readonly>
                     </div>
                       <div class="col-6 mb-6">
                         <label class="form-label" for="email">Email</label>
@@ -176,15 +176,15 @@
             $('#pay_pending_salary').click(function() {
                 const params = {
                     valid: true,
-                    student_id: showtd.student_id,
-                    student_name: $('#student_name').val(),
+                    teacher_id: showtd.teacher_id,
+                    teacher_name: $('#teacher_name').val(),
                     email: $('#email').val(),
                     salary_amount: $('#salary_amount').val(),
                    
                 }
 
                 $.ajax({
-                    url: '<?= base_url() ?>Fees/pay_pending_salary',
+                    url: '<?= base_url() ?>Teachers/pay_pending_salary',
                     method: 'POST',
                     dataType: 'JSON',
                     data: params,
