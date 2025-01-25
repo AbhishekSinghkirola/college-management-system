@@ -171,6 +171,17 @@ if (!function_exists(('get_logged_in_user'))) {
     
 }
 
+if(!function_exists(('get_fees_list'))){
+
+    function get_fees_list(){
+
+        $CI = &get_instance();
+	    $CI->load->model('Students_model', 'students_md');
+        $fees_list = $CI->students_md->get_students();
+        return $fees_list;
+    }
+}
+
 /* -------------------------- Sorting Dates In Desc ------------------------- */
 function compareByTimeStamp($time1, $time2)
 {
