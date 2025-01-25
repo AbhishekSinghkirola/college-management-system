@@ -31,11 +31,13 @@ class Auth extends CI_Controller
 				$params['password'] = isset($params['password']) ? (is_string($params['password']) ? trim($params['password']) : "") : "";
 				$params['role_id'] = isset($params['role_id']) ? (is_numeric($params['role_id']) ? trim($params['role_id']) : "") : "";
 
+				
 				if (validate_field($params['mobile'], 'mob')) {
 
 					if (validate_field($params['password'], 'strpass')) {
 						$is_valid_user = $this->auth_md->check_valid_user($params['mobile'], md5($params['password']), $params['role_id']);
 
+						//dd($is_valid_user);
 						if ($is_valid_user) {
 
 							if ($params['role_id'] == '1') {

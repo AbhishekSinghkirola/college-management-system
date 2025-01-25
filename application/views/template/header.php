@@ -134,18 +134,13 @@ $user = get_logged_in_user();
                             </a>
                             <ul class="menu-sub">
                                 <li class="menu-item">
-                                    <a href="<?= base_url() ?>Student/pending_registration" class="menu-link">
-                                        <div data-i18n="Account">Pending Registration</div>
-                                    </a>
-                                </li>
-                                <li class="menu-item">
                                     <a href="<?= base_url() ?>Student" class="menu-link">
                                         <div data-i18n="Notifications">Students</div>
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="pages-account-settings-connections.html" class="menu-link">
-                                        <div data-i18n="Connections">Promotion Student</div>
+                                    <a href="<?= base_url() ?>Student/today_attendance" class="menu-link">
+                                        <div data-i18n="Connections">Today Attendance</div>
                                     </a>
                                 </li>
                             </ul>
@@ -184,6 +179,17 @@ $user = get_logged_in_user();
                         </li>
 
                     <?php endif; ?>
+                    <?php if($user['role_type'] == 'EMP') : ?>
+
+                                <li class="menu-item">
+                                    <a href="<?= base_url() ?>Teachers/recived_salary" class="menu-link">
+                                         <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                                        <div data-i18n="Notifications">Recived Salary</div>
+                                    </a>
+                                </li>
+                                
+                    <?php endif; ?>
+
 
                     <?php if ($user['role_type'] === 'USER'): ?>
                         <!-- Courses  -->
@@ -201,8 +207,16 @@ $user = get_logged_in_user();
                                 <div data-i18n="Analytics">Attendance</div>
                             </a>
                         </li>
+
+                        <li class="menu-item">
+                            <a href="<?= base_url() ?>Fees/paid_fees" class="menu-link">
+                                    <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                                    <div data-i18n="Notifications">Pending Fees</div>
+                            </a>
+                        </li>
                     <?php endif; ?>
 
+                    <?php if($user['role_type'] == 'ADMIN'): ?>
                     <!-- Manage Teachers  -->
                     <li class="menu-item">
                         <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -215,9 +229,36 @@ $user = get_logged_in_user();
                                     <div data-i18n="Notifications">Teachers</div>
                                 </a>
                             </li>
+
+                            <li class="menu-item">
+                                <a href="<?= base_url() ?>Teachers/pending_salary" class="menu-link">
+                                    <div data-i18n="Notifications">Pending Salary</div>
+                                </a>
+                            </li>
                         </ul>
                     </li>
+                    <?php endif; ?>
 
+                    <?php if($user['role_type'] == 'ADMIN'): ?>
+
+                    <!-- manage Fees  -->
+                    <li class="menu-item">
+                        <a href="javascript:void(0);" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons bx bx-dock-top"></i>
+                            <div data-i18n="Account Settings">Fees Management</div>
+                        </a>
+                        <ul class="menu-sub">
+                            <li class="menu-item">
+                                <a href="<?= base_url() ?>Fees" class="menu-link">
+                                    <div data-i18n="Notifications">Pending Fees</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <?php endif; ?>
+
+
+                   
 
                 </ul>
             </aside>
@@ -243,6 +284,8 @@ $user = get_logged_in_user();
                             </div>
                         </div>
                         <!-- /Search -->
+
+
 
                         <ul class="navbar-nav flex-row align-items-center ms-auto">
                             <!-- Place this tag where you want the button to render. -->
@@ -311,12 +354,11 @@ $user = get_logged_in_user();
                             <!--/ User -->
                         </ul>
                     </div>
+
                 </nav>
 
                 <!-- / Navbar -->
-
                 <!-- Content wrapper -->
                 <div class="content-wrapper">
                     <!-- Content -->
-
                     <div class="container-xxl flex-grow-1 container-p-y">
