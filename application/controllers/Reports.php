@@ -41,6 +41,50 @@ class Reports extends CI_Controller{
 
 		exit(json_encode($data));
 	}
+
+	public function fees_filter(){
+
+		$session = $this->session->userdata('cms_session');
+		if (!$session) {
+			$this->session->sess_destroy();
+
+			exit(json_encode(['Resp_code' => 'RLD', 'Resp_desc' => 'Session Destroyed']));
+		}
+		$data = [];
+
+		$params = $this->input->post();
+
+		if($params['student_name'] != '' || $params['from_date'] != '' || $params['to_date'] != '') {
+
+			$student_id = $params['student_name'];
+			$from_date = $params['from_date'];
+			$to_date = $params['to_date'];
+
+			if ($this->reports_md->get_all_student_fees($student_id)) {
+
+				$data['Resp_code'] = 'RCS';
+				$data['Resp_desc'] = 'Fees Fetched successfully';
+				$data['data'] = [];
+
+			} else {
+				$data['Resp_code'] = 'ERR';
+				$data['Resp_desc'] = 'Internal Processing Error';
+				$data['data'] = [];
+			}
+
+
+		}
+
+		else{
+				$data['Resp_code'] = 'ERR';
+				$data['Resp_desc'] = 'Need Value for Search';
+				$data['data'] = [];
+		}
+
+		exit(json_encode($data));
+
+
+	}
 	
 
 
