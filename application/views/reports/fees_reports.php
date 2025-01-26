@@ -4,12 +4,13 @@
     <div class="d-flex justify-content-between align-items-center pe-4">
         <h5 class="card-header">Fees Reports</h5>
     </div>
-            <div class="card-body">
+
+    <div class="card-body">
                 <div class="row">
-                <div class="col-6">
-                        <label class="form-label" for="course_name">Students</label>
-                        <select class="form-control" id="course_name">
-                            <option value="">Select Student</option>
+                <div class="col-4">
+                        <label class="form-label" for="student_name">Students</label>
+                        <select class="form-control" id="student_name">
+                            <option value="" selected disabled>Select Student</option>
                             
                             <?php foreach($fees as $student) { ?>
 
@@ -19,21 +20,32 @@
                         </select>
                     </div>
                    
+
+                <div class="col-3">
+                    <label for="bs-rangepicker-basic" class="form-label">From Date</label>
+                    <input type="date" id="from_date" class="form-control">
+                </div>
+                <div class="col-3">
+                    <label for="bs-rangepicker-basic" class="form-label">To Date</label>
+                    <input type="date" id="to_date" class="form-control">
+                </div>
+                <div class="col-2 mt-1">
+                    <input type="submit" id="submit" name="submit" Value="Search" class="btn btn-success mt-4">
                 </div>
 
-            </div>
+                </div>
+
+    </div>
 
 
-
-
-    <div class="card-body">
+    
+            <div class="card-body">
         <div class="table-responsive text-nowrap">
             <table class="table table-bordered" id="fees_reports_table"></table>
         </div>
     </div>
 </div>
 
-<div class="card" id="second_screen" style="display: none;"></div>
 
 <script>
     $(document).ready(function() {
@@ -122,6 +134,35 @@
 
         });
 
+
+        $('#submit').click(function(e) {
+                const params = {
+                    valid: true,
+                    student_name: $('#student_name').val(),
+                    from_date : $('#from_date').val(),
+                    to_date : $('#to_date').val(),
+                }
+
+                $.ajax({
+                        url: '<?= base_url() ?>Reports/fees_filter',
+                        method: 'POST',
+                        dataType: 'JSON',
+                        data: params,
+                        success: function(res) {
+                            console.log(res);
+                            if (res.Resp_code === 'RCS') {
+                                toastr.info(res.Resp_desc)
+                                $('#back_to_first_screen').click()
+                                fees_reports_table.ajax.reload()
+                            } else if (res.Resp_code === 'RLD') {
+                                window.location.reload();
+                            } else {
+                                toastr.error(res.Resp_desc)
+                            }
+                        }
+                    })
+                
+            })
 
 
 

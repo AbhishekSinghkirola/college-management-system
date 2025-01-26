@@ -18,6 +18,18 @@ class Reports_model extends CI_Model
 
     }
 
+    public function fees_search($student_id, $from_date, $to_date){
+        // dd($student_id);
+
+        $this->db->select('*');
+        $this->db->where('student_id' , $student_id);
+        $this->db->from('student_fees');
+
+        $res = $this->db->get()->result_array();
+        dd($res);
+
+    }
+
 
      
 }

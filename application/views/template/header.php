@@ -35,6 +35,7 @@ $user = get_logged_in_user();
 
     <link rel="stylesheet" href="assets/vendor/libs/apex-charts/apex-charts.css" />
 
+
     <!-- Page CSS -->
 
     <!-- Helpers -->
