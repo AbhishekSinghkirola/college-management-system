@@ -171,14 +171,30 @@ if (!function_exists(('get_logged_in_user'))) {
     
 }
 
-if(!function_exists(('get_fees_list'))){
+/* ---------------- Function to get all data from fees table ---------------- */
+if(!function_exists(('get_student_list'))){
 
-    function get_fees_list(){
+    function get_student_list(){
 
         $CI = &get_instance();
 	    $CI->load->model('Students_model', 'students_md');
         $fees_list = $CI->students_md->get_students();
         return $fees_list;
+    }
+}
+
+
+/* ---------------- Function to get all data from teacher salary table ---------------- */
+
+if(!function_exists(('get_teacher_list'))){
+
+    function get_teacher_list(){
+
+        $CI = &get_instance();
+	    $CI->load->model('Teachers_model', 'teacher_md');
+        $salary_list = $CI->teacher_md->get_teacher();
+
+        return $salary_list;
     }
 }
 
@@ -193,3 +209,5 @@ function compareByTimeStamp($time1, $time2)
         return 0;
     }
 }
+
+
