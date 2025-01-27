@@ -1,20 +1,20 @@
-<?php $student_list = get_student_list();?>
+<?php $teacher_list = get_teacher_list();?>
 
 <div class="card" id="first_screen">
     <div class="d-flex justify-content-between align-items-center pe-4">
-        <h5 class="card-header">Fees Reports</h5>
+        <h5 class="card-header">Salary Reports</h5>
     </div>
 
     <div class="card-body">
                 <div class="row">
                 <div class="col-4">
-                        <label class="form-label" for="student_name">Students</label>
-                        <select class="form-control" id="student_name">
-                            <option value="" selected disabled>Select Student</option>
+                        <label class="form-label" for="teacher_name">Teachers</label>
+                        <select class="form-control" id="teacher_name">
+                            <option value="" selected disabled>Select Teacher</option>
                             
-                            <?php foreach($student_list as $student) { ?>
+                            <?php foreach($teacher_list as $teacher) { ?>
 
-                                <option value="<?= $student['student_id'] ?>"><?=  $student['student_name'] ?></option>
+                                <option value="<?= $teacher['teacher_id'] ?>"><?=  $teacher['name'] ?></option>
 
                            <?php }?>
                         </select>
@@ -41,7 +41,7 @@
     
             <div class="card-body">
         <div class="table-responsive text-nowrap">
-            <table class="table table-bordered" id="fees_reports_table"></table>
+            <table class="table table-bordered" id="salary_reports_table"></table>
         </div>
     </div>
 </div>
@@ -50,7 +50,7 @@
 <script>
     $(document).ready(function() {
       
-        const fees_reports_table = $('#fees_reports_table').DataTable({
+        const salary_reports_table = $('#salary_reports_table').DataTable({
             ordering: false,
             processing: true,
             order: [],
@@ -67,12 +67,12 @@
                 }
             },
             "ajax": {
-                url: "<?= base_url() ?>Reports/get_fees_list",
+                url: "<?= base_url() ?>Reports/get_salary_list",
                 type: "POST",
 
                 data: function(d) {
                     // Add filter values to the request payload
-                    d.student_name = $('#student_name').val(); // Filter by student name
+                    d.teacher_name = $('#teacher_name').val(); // Filter by teacher name
                     d.from_date = $('#from_date').val(); // Filter by from date
                     d.to_date = $('#to_date').val(); // Filter by to date
                 },
@@ -88,18 +88,18 @@
                 
             },
             columns: [{
-                    title: 'Student Name',
-                    data: 'student_name',
+                    title: 'Teacher Name',
+                    data: 'name',
                     class: 'compact all',
                 },
                 {
-                    title: 'Email',
+                    title: 'Teacher Email',
                     data: 'email',
                     class: 'compact all',
                 },
                 {
-                    title: 'Fees Amount',
-                    data: 'fees_amount',
+                    title: 'Salary Amount',
+                    data: 'salary_amount',
                     class: 'compact all',
                 },
                 {
@@ -143,7 +143,7 @@
         });
 
         $('#submit').click(function () {
-            fees_reports_table.ajax.reload(); // Reload table with updated filters
+            salary_reports_table.ajax.reload(); // Reload table with updated filters
     });
 
 

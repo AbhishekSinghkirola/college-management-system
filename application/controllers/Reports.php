@@ -22,6 +22,8 @@ class Reports extends CI_Controller{
 		$this->load->view('template/footer');
     }
 
+	/* --------------------- Function to Get fees reports -------------------- */
+
 	public function get_fees_list(){
 
 		$session = $this->session->userdata('cms_session');
@@ -32,8 +34,18 @@ class Reports extends CI_Controller{
 
 		$data = [];
 		$user = get_logged_in_user();	
-		
-		$all_fees_list = $this->reports_md->get_all_student_fees();
+		$params = $this->input->post();
+
+		if(!empty($params)){
+			$student_id = $params['student_name'];
+			$from_date = $params['from_date'];
+			$to_date = $params['to_date'];
+			
+			$all_fees_list = $this->reports_md->fetch_fees_data($student_id, $from_date, $to_date);
+		}
+		else {
+		$all_fees_list = $this->reports_md->fetch_fees_data();
+		}
 
 		$data['Resp_code'] = 'RCS';
 		$data['Resp_desc'] = 'Fees Fetched Successfully';
@@ -42,49 +54,52 @@ class Reports extends CI_Controller{
 		exit(json_encode($data));
 	}
 
-	public function fees_filter(){
+	public function salary(){
 
 		$session = $this->session->userdata('cms_session');
 		if (!$session) {
 			$this->session->sess_destroy();
+			redirect('login');
+		}
 
+		$this->load->view('template/header');
+		$this->load->view('reports/salary_reports');
+		$this->load->view('template/footer');
+	}
+
+	/* --------------------- Function to Get Salary reports -------------------- */
+
+
+	public function get_salary_list(){
+
+		$session = $this->session->userdata('cms_session');
+		if (!$session) {
+			$this->session->sess_destroy();
 			exit(json_encode(['Resp_code' => 'RLD', 'Resp_desc' => 'Session Destroyed']));
 		}
-		$data = [];
 
+		$data = [];
+		$user = get_logged_in_user();	
 		$params = $this->input->post();
 
-		if($params['student_name'] != '' || $params['from_date'] != '' || $params['to_date'] != '') {
-
-			$student_id = $params['student_name'];
+		if(!empty($params)){
+			$teacher_id = $params['teacher_name'];
 			$from_date = $params['from_date'];
 			$to_date = $params['to_date'];
-
-			if ($this->reports_md->get_all_student_fees($student_id)) {
-
-				$data['Resp_code'] = 'RCS';
-				$data['Resp_desc'] = 'Fees Fetched successfully';
-				$data['data'] = [];
-
-			} else {
-				$data['Resp_code'] = 'ERR';
-				$data['Resp_desc'] = 'Internal Processing Error';
-				$data['data'] = [];
-			}
-
-
+			
+			$salary_list = $this->reports_md->fetch_salary_data($teacher_id, $from_date, $to_date);
+		}
+		else {
+		$salary_list = $this->reports_md->fetch_salary_data();
 		}
 
-		else{
-				$data['Resp_code'] = 'ERR';
-				$data['Resp_desc'] = 'Need Value for Search';
-				$data['data'] = [];
-		}
+		$data['Resp_code'] = 'RCS';
+		$data['Resp_desc'] = 'Salary Fetched Successfully';
+		$data['data'] = is_array($salary_list) ? $salary_list : [];
 
 		exit(json_encode($data));
-
-
 	}
+
 	
 
 
