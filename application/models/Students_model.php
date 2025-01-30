@@ -55,4 +55,9 @@ class Students_model extends CI_Model
 
         return $res;
     }
+
+    public function mark_student_attendance($insert_data)
+    {
+        return $this->db->insert('student_attendance', $insert_data);
+    }
 }

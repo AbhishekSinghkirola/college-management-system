@@ -236,6 +236,7 @@ class Student extends CI_Controller
 		$this->load->view('template/footer');
 	}
 
+	/* ---------------- function to get student today attendance ---------------- */
 	public function student_today_attendance()
 	{
 		$session = $this->session->userdata('cms_session');
@@ -252,6 +253,51 @@ class Student extends CI_Controller
 		$data['Resp_code'] = 'RCS';
 		$data['Resp_desc'] = 'Attendance fetched successfully.';
 		$data['data'] = is_array($attendance) ? $attendance : [];
+
+		exit(json_encode($data));
+	}
+
+	/* ------------------- function to mark student attendance ------------------ */
+	public function mark_attendance()
+	{
+		$session = $this->session->userdata('cms_session');
+		if (!$session) {
+			$this->session->sess_destroy();
+
+			exit(json_encode(['Resp_code' => 'RLD', 'Resp_desc' => 'Session Destroyed']));
+		}
+
+		$data = [];
+
+		$params = $this->input->post();
+
+		if (isset($params['student_id']) && ctype_digit($params['student_id'])) {
+
+			$get_student = $this->students_md->get_students($params['student_id']);
+
+			if (is_array($get_student) && count($get_student)) {
+
+				$insert_data = [
+					'student_id' => $params['student_id'],
+					'date' => date('Y-m-d H:i:s'),
+					'status' => $params['status'] == 'PRESENT' ? 1 : 0
+				];
+
+				$this->students_md->mark_student_attendance($insert_data);
+
+				$data['Resp_code'] = 'RCS';
+				$data['Resp_desc'] = 'Student Attendance Marked Successfully';
+				$data['data'] = [];
+			} else {
+				$data['Resp_code'] = 'ERR';
+				$data['Resp_desc'] = 'Student Data Not Found';
+				$data['data'] = [];
+			}
+		} else {
+			$data['Resp_code'] = 'ERR';
+			$data['Resp_desc'] = 'Invalid Student';
+			$data['data'] = [];
+		}
 
 		exit(json_encode($data));
 	}
