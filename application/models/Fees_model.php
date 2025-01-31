@@ -71,6 +71,5 @@ class Fees_model extends CI_Model
         }
     
     }
-
      
 }

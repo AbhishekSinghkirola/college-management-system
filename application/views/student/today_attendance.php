@@ -70,7 +70,7 @@
                             </div>
                         `;
                         } else {
-                            return 'PRESENT';
+                            return full.status == 1 ? 'PRESENT' : 'ABSENT';
                         }
 
                     }
@@ -79,7 +79,7 @@
             buttons: [{
                     extend: 'csv',
                     className: 'btn btn-info ml-2',
-                    title: 'Student Details',
+                    title: 'Student Today Attendance',
                     exportOptions: {
                         columns: ":not(.ignoreexport)"
                     }
@@ -87,7 +87,7 @@
                 {
                     extend: 'excelHtml5',
                     className: 'btn btn-info ml-2',
-                    title: 'Student Details',
+                    title: 'Student Today Attendance',
                     exportOptions: {
                         columns: ":not(.ignoreexport)"
                     }
@@ -96,7 +96,7 @@
                 {
                     extend: 'pdfHtml5',
                     className: 'btn btn-info ml-2',
-                    title: 'Student Details',
+                    title: 'Student Today Attendance',
                     exportOptions: {
                         columns: ":not(.ignoreexport)"
                     },
@@ -106,6 +106,70 @@
                 },
 
             ]
+        });
+
+        /* ----------------------------- Present Student ---------------------------- */
+        attendance_table.on('click', '.present_student', function() {
+            const row = $(this).closest('tr');
+            const showtd = attendance_table.row(row).data();
+
+            const params = {
+                valid: true,
+                student_id: showtd.student_id,
+                status: 'PRESENT',
+            }
+
+            if (params.valid) {
+                $.ajax({
+                    url: '<?= base_url() ?>Student/mark_attendance',
+                    method: 'POST',
+                    dataType: 'JSON',
+                    data: params,
+                    success: function(res) {
+                        if (res.Resp_code === 'RCS') {
+                            toastr.info(res.Resp_desc)
+                            $('#back_to_first_screen').click()
+                            attendance_table.ajax.reload()
+                        } else if (res.Resp_code === 'RLD') {
+                            window.location.reload();
+                        } else {
+                            toastr.error(res.Resp_desc)
+                        }
+                    }
+                })
+            }
+        })
+
+        /* ----------------------------- Absent Student ----------------------------- */
+        attendance_table.on('click', '.absent_student', function() {
+            const row = $(this).closest('tr');
+            const showtd = attendance_table.row(row).data();
+
+            const params = {
+                valid: true,
+                student_id: showtd.student_id,
+                status: 'ABSENT',
+            }
+
+            if (params.valid) {
+                $.ajax({
+                    url: '<?= base_url() ?>Student/mark_attendance',
+                    method: 'POST',
+                    dataType: 'JSON',
+                    data: params,
+                    success: function(res) {
+                        if (res.Resp_code === 'RCS') {
+                            toastr.info(res.Resp_desc)
+                            $('#back_to_first_screen').click()
+                            attendance_table.ajax.reload()
+                        } else if (res.Resp_code === 'RLD') {
+                            window.location.reload();
+                        } else {
+                            toastr.error(res.Resp_desc)
+                        }
+                    }
+                })
+            }
         })
     })
 </script>

@@ -37,9 +37,14 @@ class Attendance extends CI_Controller
         }
 
         $this->load->model('Students_model', 'student_md');
+        $this->load->model('Teachers_model', 'teacher_md');
 
         if ($session['role_id'] == 3) {
             $student = $this->student_md->get_students($session['user_id']);
+
+            $join_date = $student['created_on'];
+        } else if ($session['role_id'] == 2) {
+            $student = $this->teacher_md->get_teacher($session['user_id']);
 
             $join_date = $student['created_on'];
         }
@@ -111,5 +116,23 @@ class Attendance extends CI_Controller
         $data['Resp_desc'] = 'Attendance Marked Successfully';
         $data['data'] = [];
         echo json_encode($data);
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*                             Teacher Attendance                             */
+    /* -------------------------------------------------------------------------- */
+    public function teacher_attendance()
+    {
+        $session = $this->session->userdata('cms_session');
+        if (!$session) {
+            $this->session->sess_destroy();
+            redirect('login');
+        }
+
+        $attendance = $this->attendance_md->get_attendance($session['user_id'], $session['role_id'], date('Y-m-d'));
+
+        $this->load->view('template/header');
+        $this->load->view('attendance/teacher_attendance', ['attendance' => $attendance]);
+        $this->load->view('template/footer');
     }
 }
