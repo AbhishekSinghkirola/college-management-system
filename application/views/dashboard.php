@@ -14,7 +14,7 @@
                             
                           </div>
                           <span class="fw-semibold d-block mb-1">Total Students</span>
-                          <h3 class="card-title mb-2">$12,628</h3>
+                          <h3 class="card-title mb-2"> <?= $student_count; ?></h3>
                           
                         </div>
                       </div>
@@ -31,7 +31,7 @@
                           
                           </div>
                           <span class="fw-semibold d-block mb-1">Total Teachers</span>
-                          <h3 class="card-title text-nowrap mb-1">$4,679</h3>
+                          <h3 class="card-title text-nowrap mb-1"> <?= $teacher_count; ?></h3>
                         
                         </div>
                       </div>
@@ -48,7 +48,7 @@
                             
                           </div>
                           <span class="fw-semibold d-block mb-1">Pending Fees</span>
-                          <h3 class="card-title mb-2">$12,628</h3>
+                          <h3 class="card-title mb-2"><?= $pending_fees_count;?></h3>
                           
                         </div>
                       </div>
@@ -65,7 +65,7 @@
                           
                           </div>
                           <span class="fw-semibold d-block mb-1">Pending Salaries</span>
-                          <h3 class="card-title text-nowrap mb-1">$4,679</h3>
+                          <h3 class="card-title text-nowrap mb-1"><?= $pending_salaries_count; ?></h3>
                          
                         </div>
                       </div>
@@ -85,71 +85,24 @@
             </div>
             <div class="card-body">
             <ul class="list-unstyled mb-0">
-                <li class="d-flex mb-4 align-items-center">
+              <?php foreach($courses_list as $courses){ ?>
+
+              <li class="d-flex mb-4 align-items-center">
                 <div class="avatar flex-shrink-0 me-4">
                     <span class="avatar-initial rounded bg-label-primary"><i class="icon-base bx bx-video icon-lg"></i></span>
                 </div>
                 <div class="row w-100 align-items-center">
                     <div class="col-sm-8 col-md-12 col-xxl-8 mb-1 mb-sm-0 mb-md-1 mb-xxl-0">
-                    <h6 class="mb-0">Videography Basic Design Course</h6>
+                    <h6 class="mb-0"><?= $courses['course_name'] ?></h6>
                     </div>
                     <div class="col-sm-4 col-md-12 col-xxl-4 d-flex justify-content-xxl-end">
                     <div class="badge bg-label-secondary">1.2k Views</div>
                     </div>
                 </div>
-                </li>
-                <li class="d-flex mb-4 align-items-center">
-                <div class="avatar flex-shrink-0 me-4">
-                    <span class="avatar-initial rounded bg-label-info"><i class="icon-base bx bx-code-alt icon-lg"></i></span>
-                </div>
-                <div class="row w-100 align-items-center">
-                    <div class="col-sm-8 col-md-12 col-xxl-8 mb-1 mb-sm-0 mb-md-1 mb-xxl-0">
-                    <h6 class="mb-0">Basic Front-end Development Course</h6>
-                    </div>
-                    <div class="col-sm-4 col-md-12 col-xxl-4 d-flex justify-content-xxl-end">
-                    <div class="badge bg-label-secondary">834 Views</div>
-                    </div>
-                </div>
-                </li>
-                <li class="d-flex mb-4 align-items-center">
-                <div class="avatar flex-shrink-0 me-4">
-                    <span class="avatar-initial rounded bg-label-success"><i class="icon-base bx bx-camera icon-lg"></i></span>
-                </div>
-                <div class="row w-100 align-items-center">
-                    <div class="col-sm-8 col-md-12 col-xxl-8 mb-1 mb-sm-0 mb-md-1 mb-xxl-0">
-                    <h6 class="mb-0">Basic Fundamentals of Photography</h6>
-                    </div>
-                    <div class="col-sm-4 col-md-12 col-xxl-4 d-flex justify-content-xxl-end">
-                    <div class="badge bg-label-secondary">3.7k Views</div>
-                    </div>
-                </div>
-                </li>
-                <li class="d-flex mb-4 align-items-center">
-                <div class="avatar flex-shrink-0 me-4">
-                    <span class="avatar-initial rounded bg-label-warning"><i class="icon-base bx bx-basketball icon-lg"></i></span>
-                </div>
-                <div class="row w-100 align-items-center">
-                    <div class="col-sm-8 col-md-12 col-xxl-8 mb-1 mb-sm-0 mb-md-1 mb-xxl-0">
-                    <h6 class="mb-0">Advance Dribble Base Visual Design</h6>
-                    </div>
-                    <div class="col-sm-4 col-md-12 col-xxl-4 d-flex justify-content-xxl-end">
-                    <div class="badge bg-label-secondary">2.5k Views</div>
-                    </div>
-                </div>
-                </li>
-                <li class="d-flex align-items-center">
-                <div class="avatar flex-shrink-0 me-4">
-                    <span class="avatar-initial rounded bg-label-danger"><i class="icon-base bx bx-microphone icon-lg"></i></span>
-                </div>
-                <div class="row w-100 align-items-center">
-                    <div class="col-sm-8 col-md-12 col-xxl-8 mb-1 mb-sm-0 mb-md-1 mb-xxl-0">
-                    <h6 class="mb-0">Your First Singing Lesson</h6>
-                    </div>
-                    <div class="col-sm-4 col-md-12 col-xxl-4 d-flex justify-content-xxl-end">
-                    <div class="badge bg-label-secondary">948 Views</div>
-                    </div>
-                </div>
-                </li>
+              </li>
+
+              <?php  } ?>
+               
             </ul>
             </div>
         </div>
@@ -218,10 +171,10 @@
           </div>
         </div>
         <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center mb-6">
+          <div class="d-flex justify-content-between align-items-center mb-4">
             <div class="d-flex align-items-center">
               <div class="avatar me-4 w-px-34 h-px-34">
-                <img src="../../assets/img/avatars/1.png" alt="Avatar" class="rounded-circle">
+              <img src="assets/img/avatars/1.png" alt="" class="w-px-40 h-auto rounded-circle">
               </div>
               <div>
                 <div>
@@ -234,10 +187,10 @@
               <h6 class="mb-0">33</h6>
             </div>
           </div>
-          <div class="d-flex justify-content-between align-items-center mb-6">
+          <div class="d-flex justify-content-between align-items-center mb-4">
             <div class="d-flex align-items-center">
               <div class="avatar me-4 w-px-34 h-px-34">
-                <img src="../../assets/img/avatars/2.png" alt="Avatar" class="rounded-circle">
+              <img src="assets/img/avatars/1.png" alt="" class="w-px-40 h-auto rounded-circle">
               </div>
               <div>
                 <div>
@@ -250,10 +203,10 @@
               <h6 class="mb-0">52</h6>
             </div>
           </div>
-          <div class="d-flex justify-content-between align-items-center mb-6">
+          <div class="d-flex justify-content-between align-items-center mb-4">
             <div class="d-flex align-items-center">
               <div class="avatar me-4 w-px-34 h-px-34">
-                <img src="../../assets/img/avatars/3.png" alt="Avatar" class="rounded-circle">
+              <img src="assets/img/avatars/1.png" alt="" class="w-px-40 h-auto rounded-circle">
               </div>
               <div>
                 <div>
@@ -269,7 +222,7 @@
           <div class="d-flex justify-content-between align-items-center">
             <div class="d-flex align-items-center">
               <div class="avatar me-4 w-px-34 h-px-34">
-                <img src="../../assets/img/avatars/4.png" alt="Avatar" class="rounded-circle">
+              <img src="assets/img/avatars/1.png" alt="" class="w-px-40 h-auto rounded-circle">
               </div>
               <div>
                 <div>
