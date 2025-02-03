@@ -49,6 +49,39 @@ class Dashboard_model extends CI_Model
         }
     }
 
+    public function change_password($user_id, $new_password, $role_id){
+        $table = '';
+
+        if ($role_id == '1') {
+            $table = 'users';
+            $this->db->where('user_id', $user_id);
+        } 
+        
+        else if ($role_id == '2') {
+            $table = 'teacher';
+            $this->db->where('teacher_id', $user_id);
+        } 
+        
+        else if ($role_id == '3') {
+            $table = 'student';
+            $this->db->where('student_id', $user_id);
+        }
+
+        else {
+            return false;
+        }
+
+       $res = $this->db->update($table , ['password' => $new_password]);
+
+       //dd($this->db->last_query());
+         if ($res) {
+             return true;
+            } else {
+                return false;
+            }
+
+    }
+
 
 
 }
