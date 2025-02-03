@@ -105,17 +105,69 @@ class Dashboard extends CI_Controller
 		$this->load->view('template/footer');
 	}
 
-	public function get_student_count(){
 
+	public function user_setting(){
 		$session = $this->session->userdata('cms_session');
 		if (!$session) {
 			$this->session->sess_destroy();
-
-			exit(json_encode(['Resp_code' => 'RLD', 'Resp_desc' => 'Session Destroyed']));
+			redirect('login');
 		}
 
-		$std_count = $this->dash_md->student_count();
+		$this->load->view('template/header');
+		$this->load->view('user_setting');
+		$this->load->view('template/footer');
+	}
 
 
+	public function password(){
+		$session = $this->session->userdata('cms_session');
+		if (!$session) {
+			$this->session->sess_destroy();
+			redirect('login');
+		}
+
+		$this->load->view('template/header');
+		$this->load->view('password');
+		$this->load->view('template/footer');
+	}
+
+
+	public function change_password(){
+		
+		$session = $this->session->userdata('cms_session');
+		if (!$session) {
+			$this->session->sess_destroy();
+			redirect('login');
+		}
+
+		$user = get_logged_in_user();
+		
+		$current_password_enter_by_user = md5($_POST['current_password']);
+		$new_password = md5($_POST['new_password']);
+
+		if($current_password_enter_by_user ===  $user['password']){
+
+		$res = 	$this->dash_md->change_password($user['user_id'], $new_password,  $user['role_id']);
+
+		if($res){
+					$data['Resp_code'] = 'RCS';
+					$data['Resp_desc'] = 'Password Updated Successfully';
+					$data['data'] = [];
+		}
+		else{
+					$data['Resp_code'] = 'ERR';
+					$data['Resp_desc'] = 'Internal Processing Error';
+					$data['data'] = [];
+		}
+		}
+		else{
+				$data['Resp_code'] = 'ERR';
+				$data['Resp_desc'] = 'Invalid Current Password';
+				$data['data'] = [];
+		}
+
+		exit(json_encode($data));
+
+		
 	}
 }

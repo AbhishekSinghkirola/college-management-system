@@ -1,3 +1,8 @@
+<?php
+$user = get_logged_in_user();
+?>
+
+<?php if ($user['role_type'] !== 'USER'): ?>
 <div class="row">
         
                 <div class="col-lg-12 col-md-4 order-1">
@@ -19,6 +24,7 @@
                         </div>
                       </div>
                     </div>
+                    <?php if ($user['role_type'] == 'ADMIN'): ?>
                     <div class="col-lg-3 col-md-12 col-6 mb-4">
                       <div class="card">
                         <div class="card-body">
@@ -36,6 +42,7 @@
                         </div>
                       </div>
                     </div>
+                    
                     <div class="col-lg-3 col-md-12 col-6 mb-4">
                       <div class="card">
                         <div class="card-body">
@@ -70,10 +77,14 @@
                         </div>
                       </div>
                     </div>
+
+                    <?php endif;?>
                   </div>
                 </div>
 
 </div>
+
+<?php endif; ?>
 
 <div class="row mb-4 g-6">
     
