@@ -50,7 +50,7 @@
             </ul>
             <div class="mt-4">
               <button type="submit" class="btn btn-primary me-3" id="save_password">Save changes</button>
-              <button type="reset" class="btn btn-label-secondary">Reset</button>
+              <button id="reset" type="reset" class="btn btn-secondary">Reset</button>
             </div>
           <input type="hidden"></form>
         </div>
@@ -100,7 +100,7 @@
                         success: function(res) {
                             if (res.Resp_code === 'RCS') {
                                 toastr.info(res.Resp_desc)
-                                //window.location.reload();
+                                $("#formAccountSettings")[0].reset();
 
                                 $('#back_to_first_screen').click()
                                 students_table.ajax.reload()
@@ -112,5 +112,33 @@
                         }
                     })
                 }
-            })
-  </script>
+            });
+ 
+ 
+            /* ----------------------------- Reset Password ----------------------------- */
+
+            $('#reset').click(function(e){
+
+                $.ajax({
+                        url: '<?= base_url() ?>Dashboard/send_reset_link',
+                        method: 'POST',
+                        dataType: 'JSON',
+                       
+                        success: function(res) {
+                            if (res.Resp_code === 'RCS') {
+                                toastr.info(res.Resp_desc)
+                                $("#formAccountSettings")[0].reset();
+
+                                $('#back_to_first_screen').click()
+                                students_table.ajax.reload()
+                            } else if (res.Resp_code === 'RLD') {
+                                window.location.reload();
+                            } else {
+                                toastr.error(res.Resp_desc)
+                            }
+                        }
+                    });
+
+            });
+ 
+ </script>

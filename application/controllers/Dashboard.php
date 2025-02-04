@@ -170,4 +170,29 @@ class Dashboard extends CI_Controller
 
 		
 	}
+
+	public function send_reset_link(){
+		
+		$user = get_logged_in_user();
+
+		if($user['email']){
+				// bin2hex convert the string into hexadecimal value 
+				$token = bin2hex(random_bytes(50));
+
+				//strtotime() Parse English textual datetimes into Unix timestamps
+				$expiry = date('Y-m-d H:i:s', strtotime('+1 hour'));
+				
+				$this->dash_md->update_reset_token($token, $expiry);	
+
+
+		}
+
+		else{
+				$data['Resp_code'] = 'ERR';
+				$data['Resp_desc'] = 'Invalid Email Id Password';
+				$data['data'] = [];
+		}
+
+		exit(json_decode($data));
+	}
 }

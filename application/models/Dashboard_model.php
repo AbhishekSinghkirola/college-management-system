@@ -83,5 +83,33 @@ class Dashboard_model extends CI_Model
     }
 
 
+    public function update_reset_token($token, $expiry){
+        
+		$user = get_logged_in_user();
+
+        if($user['role_type'] == 'ADMIN'){
+
+            $id = $user['user_id'];
+            $this->db->where('user_id', $id);
+            $this->db->update('users', ['reset_token' => $token, 'token_expiry' => $expiry]);    
+
+        }
+        elseif($user['role_type'] == 'EMP'){
+
+            $id = $user['teacher_id'];
+            $this->db->where('teacher_id', $id);
+            $this->db->update('users', ['reset_token' => $token, 'token_expiry' => $expiry]);    
+
+        }
+        elseif($user['role_type'] == 'USER'){
+
+            $id = $user['student_id'];
+            $this->db->where('student_id', $id);
+            $this->db->update('users', ['reset_token' => $token, 'token_expiry' => $expiry]);    
+
+        }
+
+    }
+
 
 }
