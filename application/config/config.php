@@ -532,3 +532,14 @@ $config['rewrite_short_tags'] = FALSE;
 | Array:		array('10.0.1.200', '192.168.5.0/24')
 */
 $config['proxy_ips'] = '';
+
+$config['protocol'] = 'smtp';  // Use SMTP instead of PHP's mail() function
+$config['smtp_host'] = 'tls://smtp.gmail.com';  // Gmail SMTP server
+$config['smtp_port'] = 587;  // Port for Gmail SMTP
+$config['smtp_user'] = '';
+$config['smtp_pass'] = ''; // Your Gmail email password (use App Passwords if 2FA is enabled)
+$config['mailtype'] = 'html';  // Set the email format to HTML
+$config['charset'] = 'utf-8';  // Character encoding
+$config['wordwrap'] = TRUE;  // Enable word wrapping
+$config['smtp_crypto'] = 'tls';  // SMTP encryption (TLS)
+$config['newline'] = "\r\n";  // This is to avoid issues with line breaks
