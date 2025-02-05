@@ -11,6 +11,7 @@ class Dashboard extends CI_Controller
 		$this->load->model('Teachers_model', 'teacher_md');
 		$this->load->model('Courses_model', 'courses_md');
 		
+		$this->load->library('email');
 	}
 
 	public function index()
@@ -174,22 +175,40 @@ class Dashboard extends CI_Controller
 	public function send_reset_link(){
 		
 		$user = get_logged_in_user();
+		$email = $user['email'];
 
-		if($user['email']){
+		if($email){
 				// bin2hex convert the string into hexadecimal value 
 				$token = bin2hex(random_bytes(50));
 
 				//strtotime() Parse English textual datetimes into Unix timestamps
 				$expiry = date('Y-m-d H:i:s', strtotime('+1 hour'));
-				
+
 				$this->dash_md->update_reset_token($token, $expiry);	
 
+				$reset_link = site_url('passwordreset/reset_form/'.$token);
 
+				$this->email->from('nr7584128@gmail.com', 'Password Reset');
+				$this->email->to($email);
+				$this->email->subject('Password Reset Request');
+				$this->email->message("Click on this link to reset your password: $reset_link");
+
+				if ($this->email->send()) {
+
+					$data['Resp_code'] = 'RCS';
+					$data['Resp_desc'] = 'Password reset link sent successfully.';
+					$data['data'] = [];
+
+				} else {
+					$data['Resp_code'] = 'ERR';
+					$data['Resp_desc'] = 'Failed to send reset link. Try again.';
+					$data['data'] = [];
+				}
 		}
 
 		else{
 				$data['Resp_code'] = 'ERR';
-				$data['Resp_desc'] = 'Invalid Email Id Password';
+				$data['Resp_desc'] = 'Email not found.';
 				$data['data'] = [];
 		}
 
