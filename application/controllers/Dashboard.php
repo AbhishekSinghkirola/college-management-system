@@ -245,7 +245,7 @@ class Dashboard extends CI_Controller
 				// 	$mail->Host       = 'smtp.gmail.com';
 				// 	$mail->SMTPAuth   = true;
 				// 	$mail->Username   = ''; // Replace with your email
-				// 	$mail->Password   = 'rawat9015'; // Use Gmail App Password
+				// 	$mail->Password   = ''; // Use Gmail App Password
 				// 	$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Use TLS
 				// 	$mail->Port       = 587; // Port for TLS
 
