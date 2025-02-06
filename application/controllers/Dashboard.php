@@ -196,7 +196,7 @@ class Dashboard extends CI_Controller
 
 				$reset_link = site_url('passwordreset/reset_form/'.$token);
 
-				// $this->email->from('nr7584128@gmail.com', 'Password Reset');
+				// $this->email->from('', 'Password Reset');
 				// $this->email->to($email);
 				// $this->email->subject('Password Reset Request');
 				// $this->email->message("Click on this link to reset your password: $reset_link");
@@ -205,8 +205,8 @@ class Dashboard extends CI_Controller
 				$config['protocol']="smtp";
 				                        //    $config['smtp_crypto']="tls";
 				$config['smtp_host']='ssl://smtp.gmail.com';
-				$config['smtp_user']='nr7584128@gmail.com';
-				$config['smtp_pass']='csnsjfeysbvnmnpu';
+				$config['smtp_user']='';
+				$config['smtp_pass']='';
 				$config['smtp_port']=465;
 				$config['charset'] = 'iso-8859-1';
 				
@@ -217,7 +217,7 @@ class Dashboard extends CI_Controller
 								
 										   
 											$this->email->initialize($config);
-											$this->email->from('nr7584128@gmail.com');
+											$this->email->from('');
 											$this->email->to($email);
 				$this->email->subject('Password Reset Request');
 											$this->email->message("Click on this link to reset your password: $reset_link");
@@ -244,7 +244,7 @@ class Dashboard extends CI_Controller
 				// 	$mail->isSMTP();
 				// 	$mail->Host       = 'smtp.gmail.com';
 				// 	$mail->SMTPAuth   = true;
-				// 	$mail->Username   = 'nr7584128@gmail.com'; // Replace with your email
+				// 	$mail->Username   = ''; // Replace with your email
 				// 	$mail->Password   = 'rawat9015'; // Use Gmail App Password
 				// 	$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Use TLS
 				// 	$mail->Port       = 587; // Port for TLS
