@@ -1,4 +1,10 @@
 <?php
+
+// use PHPMailer\PHPMailer\PHPMailer;
+// use PHPMailer\PHPMailer\Exception;
+
+// require 'vendor/autoload.php';  
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class Dashboard extends CI_Controller
@@ -12,6 +18,8 @@ class Dashboard extends CI_Controller
 		$this->load->model('Courses_model', 'courses_md');
 		
 		$this->load->library('email');
+
+		
 	}
 
 	public function index()
@@ -173,7 +181,7 @@ class Dashboard extends CI_Controller
 	}
 
 	public function send_reset_link(){
-		
+		// csns jfey sbvn mnpu
 		$user = get_logged_in_user();
 		$email = $user['email'];
 
@@ -188,22 +196,72 @@ class Dashboard extends CI_Controller
 
 				$reset_link = site_url('passwordreset/reset_form/'.$token);
 
-				$this->email->from('nr7584128@gmail.com', 'Password Reset');
-				$this->email->to($email);
+				// $this->email->from('nr7584128@gmail.com', 'Password Reset');
+				// $this->email->to($email);
+				// $this->email->subject('Password Reset Request');
+				// $this->email->message("Click on this link to reset your password: $reset_link");
+
+
+				$config['protocol']="smtp";
+				                        //    $config['smtp_crypto']="tls";
+				$config['smtp_host']='ssl://smtp.gmail.com';
+				$config['smtp_user']='nr7584128@gmail.com';
+				$config['smtp_pass']='csnsjfeysbvnmnpu';
+				$config['smtp_port']=465;
+				$config['charset'] = 'iso-8859-1';
+				
+				$config['wordwrap'] = TRUE;
+											$config['mailtype']='html';
+											$config['newline']="\r\n";
+											$config['crlf']="\r\n";
+								
+										   
+											$this->email->initialize($config);
+											$this->email->from('nr7584128@gmail.com');
+											$this->email->to($email);
 				$this->email->subject('Password Reset Request');
-				$this->email->message("Click on this link to reset your password: $reset_link");
+											$this->email->message("Click on this link to reset your password: $reset_link");
+											$this->email->set_newline("\r\n");
+											dd($this->email->send());
 
-				if ($this->email->send()) {
 
-					$data['Resp_code'] = 'RCS';
-					$data['Resp_desc'] = 'Password reset link sent successfully.';
-					$data['data'] = [];
+				// if ($this->email->send()) {
 
-				} else {
-					$data['Resp_code'] = 'ERR';
-					$data['Resp_desc'] = 'Failed to send reset link. Try again.';
-					$data['data'] = [];
-				}
+				// 	$data['Resp_code'] = 'RCS';
+				// 	$data['Resp_desc'] = 'Password reset link sent successfully.';
+				// 	$data['data'] = [];
+
+				// } else {
+				// 	$data['Resp_code'] = 'ERR';
+				// 	$data['Resp_desc'] = 'Failed to send reset link. Try again.';
+				// 	$data['data'] = [];
+				// }
+
+				// $mail = new PHPMailer(true);
+
+				// try {
+				// 	// SMTP Configuration
+				// 	$mail->isSMTP();
+				// 	$mail->Host       = 'smtp.gmail.com';
+				// 	$mail->SMTPAuth   = true;
+				// 	$mail->Username   = 'nr7584128@gmail.com'; // Replace with your email
+				// 	$mail->Password   = 'rawat9015'; // Use Gmail App Password
+				// 	$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Use TLS
+				// 	$mail->Port       = 587; // Port for TLS
+
+				// 	// Email details
+				// 	$mail->setFrom('your-email@gmail.com', 'Your Name');
+				// 	$mail->addAddress('recipient@example.com');  // Replace with recipient email
+				// 	$mail->Subject = 'Test Email via PHPMailer';
+				// 	$mail->isHTML(true);
+				// 	$mail->Body    = '<p>Hello, this is a test email sent using PHPMailer in CodeIgniter 3.</p>';
+
+				// 	// Send email
+				// 	$mail->send();
+				// 	echo 'Email sent successfully!';
+				// } catch (Exception $e) {
+				// 	echo "Error: {$mail->ErrorInfo}";
+				// }
 		}
 
 		else{
@@ -212,6 +270,6 @@ class Dashboard extends CI_Controller
 				$data['data'] = [];
 		}
 
-		exit(json_decode($data));
+		exit(json_encode($data));
 	}
 }

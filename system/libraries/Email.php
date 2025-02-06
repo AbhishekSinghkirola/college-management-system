@@ -1902,8 +1902,8 @@ class CI_Email {
 		{
 			// most documentation of sendmail using the "-f" flag lacks a space after it, however
 			// we've encountered servers that seem to require it to be in place.
-			// return mail($this->_recipients, $this->_subject, $this->_finalbody, $this->_header_str, '-f '.$from);
-			return mail($this->_recipients, $this->_subject, $this->_finalbody, $this->_header_str, "-f ".$this->clean_email($this->_headers['From']));
+			return mail($this->_recipients, $this->_subject, $this->_finalbody, $this->_header_str, '-f '.$from);
+			// return mail($this->_recipients, $this->_subject, $this->_finalbody, $this->_header_str, "-f ".$this->clean_email($this->_headers['From']));
 			
 		}
 	}
