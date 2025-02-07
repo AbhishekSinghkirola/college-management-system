@@ -194,74 +194,40 @@ class Dashboard extends CI_Controller
 
 				$this->dash_md->update_reset_token($token, $expiry);	
 
-				$reset_link = site_url('passwordreset/reset_form/'.$token);
-
-				// $this->email->from('', 'Password Reset');
-				// $this->email->to($email);
-				// $this->email->subject('Password Reset Request');
-				// $this->email->message("Click on this link to reset your password: $reset_link");
-
+				$reset_link = site_url('Dashboard/reset_form/'.$token);
 
 				$config['protocol']="smtp";
-				                        //    $config['smtp_crypto']="tls";
+				 //    $config['smtp_crypto']="tls";
 				$config['smtp_host']='ssl://smtp.gmail.com';
-				$config['smtp_user']='';
-				$config['smtp_pass']='';
+				$config['smtp_user']='example@gmail.com';
+				$config['smtp_pass']='your_app_password';
 				$config['smtp_port']=465;
 				$config['charset'] = 'iso-8859-1';
 				
 				$config['wordwrap'] = TRUE;
-											$config['mailtype']='html';
-											$config['newline']="\r\n";
-											$config['crlf']="\r\n";
+				$config['mailtype']='html';
+				$config['newline']="\r\n";
+				$config['crlf']="\r\n";
 								
 										   
-											$this->email->initialize($config);
-											$this->email->from('');
-											$this->email->to($email);
+				$this->email->initialize($config);
+				$this->email->from('example@gmail.com');
+				$this->email->to($email);
 				$this->email->subject('Password Reset Request');
-											$this->email->message("Click on this link to reset your password: $reset_link");
-											$this->email->set_newline("\r\n");
-											dd($this->email->send());
+				$this->email->message("Click on this link to reset your password: $reset_link");
+				$this->email->set_newline("\r\n");
+				// dd($this->email->send());
 
+				if ($this->email->send()) {
+					$data['Resp_code'] = 'RCS';
+					$data['Resp_desc'] = 'Password reset link sent successfully.';
+					$data['data'] = [];
 
-				// if ($this->email->send()) {
-
-				// 	$data['Resp_code'] = 'RCS';
-				// 	$data['Resp_desc'] = 'Password reset link sent successfully.';
-				// 	$data['data'] = [];
-
-				// } else {
-				// 	$data['Resp_code'] = 'ERR';
-				// 	$data['Resp_desc'] = 'Failed to send reset link. Try again.';
-				// 	$data['data'] = [];
-				// }
-
-				// $mail = new PHPMailer(true);
-
-				// try {
-				// 	// SMTP Configuration
-				// 	$mail->isSMTP();
-				// 	$mail->Host       = 'smtp.gmail.com';
-				// 	$mail->SMTPAuth   = true;
-				// 	$mail->Username   = ''; // Replace with your email
-				// 	$mail->Password   = 'rawat9015'; // Use Gmail App Password
-				// 	$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Use TLS
-				// 	$mail->Port       = 587; // Port for TLS
-
-				// 	// Email details
-				// 	$mail->setFrom('your-email@gmail.com', 'Your Name');
-				// 	$mail->addAddress('recipient@example.com');  // Replace with recipient email
-				// 	$mail->Subject = 'Test Email via PHPMailer';
-				// 	$mail->isHTML(true);
-				// 	$mail->Body    = '<p>Hello, this is a test email sent using PHPMailer in CodeIgniter 3.</p>';
-
-				// 	// Send email
-				// 	$mail->send();
-				// 	echo 'Email sent successfully!';
-				// } catch (Exception $e) {
-				// 	echo "Error: {$mail->ErrorInfo}";
-				// }
+				} else {
+					$data['Resp_code'] = 'ERR';
+					$data['Resp_desc'] = 'Failed to send reset link. Try again.';
+					$data['data'] = [];
+				}
 		}
 
 		else{
@@ -271,5 +237,21 @@ class Dashboard extends CI_Controller
 		}
 
 		exit(json_encode($data));
+	}
+
+	public function reset_form($token){
+		//dd($token);
+
+		$user = get_logged_in_user();
+
+		dd($user);
+
+		if(!$user){
+			$data['Resp_code'] = 'ERR';
+			$data['Resp_desc'] = 'Invalid or expired token!';
+			$data['data'] = [];
+		}
+
+		$this->load->view('reset_form');
 	}
 }
