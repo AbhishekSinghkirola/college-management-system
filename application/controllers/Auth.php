@@ -182,4 +182,129 @@ class Auth extends CI_Controller
 			redirect('login');
 		}
 	}
+
+
+	public function forget_password(){
+
+		$this->load->view('forget_password');
+	}
+
+	
+	public function send_reset_link(){
+
+		$email = $_POST['email'];
+
+		$user = $this->auth_md->find_user_by_email($email);
+
+		if($email){
+				// bin2hex convert the string into hexadecimal value 
+				$token = bin2hex(random_bytes(50));
+
+				//strtotime() Parse English textual datetimes into Unix timestamps
+				$expiry = date('Y-m-d H:i:s', strtotime('+1 hour'));
+
+				$this->auth_md->store_reset_token($user['table'], $user['id'], $token, $expiry);	
+
+				$reset_link = site_url('Auth/reset_form/' . $token);
+
+				$config['protocol']="smtp";
+				 //    $config['smtp_crypto']="tls";
+				$config['smtp_host']='ssl://smtp.gmail.com';
+				$config['smtp_user']='nr7584128@gmail.com';
+				$config['smtp_pass']='csnsjfeysbvnmnpu';
+				$config['smtp_port']=465;
+				$config['charset'] = 'iso-8859-1';
+				
+				$config['wordwrap'] = TRUE;
+				$config['mailtype']='html';
+				$config['newline']="\r\n";
+				$config['crlf']="\r\n";
+								
+										   
+				$this->email->initialize($config);
+				$this->email->from('nr7584128@gmail.com');
+				$this->email->to($email);
+				$this->email->subject('Password Reset Request');
+				$this->email->message("Click on this link to reset your password: $reset_link");
+				$this->email->set_newline("\r\n");
+				// dd($this->email->send());
+
+				if ($this->email->send()) {
+					$data['Resp_code'] = 'RCS';
+					$data['Resp_desc'] = 'Password reset link sent successfully.';
+					$data['data'] = [];
+
+				} else {
+					$data['Resp_code'] = 'ERR';
+					$data['Resp_desc'] = 'Failed to send reset link. Try again.';
+					$data['data'] = [];
+				}
+		}
+
+		else{
+				$data['Resp_code'] = 'ERR';
+				$data['Resp_desc'] = 'Email not found.';
+				$data['data'] = [];
+		}
+
+		exit(json_encode($data));
+	}
+
+	public function reset_form($token){
+	
+		$user = $this->auth_md->find_user_by_token($token);
+
+		if(!$user){
+			echo "Invalid or expired token!";
+			exit;
+		}
+		else{
+			$data['token'] = $token;
+			$data['user_data'] = $user;
+			//dd($data);
+		}
+		$this->load->view('reset_form', $data);
+
+
+	}
+
+	public function update_password(){
+
+		$token = $this->input->post('token');
+   		$new_password = $this->input->post('new_password');
+
+		$user = $this->auth_md->find_user_by_token($token);
+
+		if($user){
+
+		$res = $this->auth_md->update_password($user['table'], $user['id_field'], $user['id'], $new_password);
+
+		if($res){
+			$data['Resp_code'] = 'RCS';
+			$data['Resp_desc'] = 'Password Updated Successfully';
+			$data['data'] = [];
+
+		}
+			else{
+						$data['Resp_code'] = 'ERR';
+						$data['Resp_desc'] = 'Internal Processing Error';
+						$data['data'] = [];
+			}
+		}
+		else{
+				$data['Resp_code'] = 'ERR';
+				$data['Resp_desc'] = 'Invalid or expired token!';
+				$data['data'] = [];
+		 }
+
+		 exit(json_encode($data));
+
+
+
+
+	}
 }
+
+
+
+
