@@ -88,7 +88,7 @@ $user = get_logged_in_user();
                 <ul class="menu-inner py-1">
                     <!-- Dashboard -->
                     <li class="menu-item active">
-                        <a href="index.html" class="menu-link">
+                        <a href="<?= base_url() ?>Dashboard" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-home-circle"></i>
                             <div data-i18n="Analytics">Dashboard</div>
                         </a>
@@ -289,9 +289,7 @@ $user = get_logged_in_user();
 
                         <ul class="navbar-nav flex-row align-items-center ms-auto">
                             <!-- Place this tag where you want the button to render. -->
-                            <li class="nav-item lh-1 me-3">
-                                <a class="github-button" href="https://github.com/themeselection/sneat-html-admin-template-free" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star themeselection/sneat-html-admin-template-free on GitHub">Star</a>
-                            </li>
+                        
 
                             <!-- User -->
                             <li class="nav-item navbar-dropdown dropdown-user dropdown">
@@ -310,8 +308,8 @@ $user = get_logged_in_user();
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <span class="fw-semibold d-block">John Doe</span>
-                                                    <small class="text-muted">Admin</small>
+                                                    <span class="fw-semibold d-block"><?= $user['first_name']; ?></span>
+                                                    <small class="text-muted"><?= $user['role_type']; ?></small>
                                                 </div>
                                             </div>
                                         </a>
@@ -319,27 +317,14 @@ $user = get_logged_in_user();
                                     <li>
                                         <div class="dropdown-divider"></div>
                                     </li>
+                            
                                     <li>
-                                        <a class="dropdown-item" href="#">
-                                            <i class="bx bx-user me-2"></i>
-                                            <span class="align-middle">My Profile</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#">
+                                        <a class="dropdown-item" href="<?= base_url();?>Dashboard/user_setting">
                                             <i class="bx bx-cog me-2"></i>
                                             <span class="align-middle">Settings</span>
                                         </a>
                                     </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#">
-                                            <span class="d-flex align-items-center align-middle">
-                                                <i class="flex-shrink-0 bx bx-credit-card me-2"></i>
-                                                <span class="flex-grow-1 align-middle">Billing</span>
-                                                <span class="flex-shrink-0 badge badge-center rounded-pill bg-danger w-px-20 h-px-20">4</span>
-                                            </span>
-                                        </a>
-                                    </li>
+                                  
                                     <li>
                                         <div class="dropdown-divider"></div>
                                     </li>
