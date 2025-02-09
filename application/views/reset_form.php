@@ -1,5 +1,7 @@
 <?php
-$roles = get_roles(true);
+
+// dd($token);
+
 ?>
 <!DOCTYPE html>
 
@@ -97,7 +99,7 @@ $roles = get_roles(true);
             <h4 class="mb-2">Reset Password 🔒</h4>
             <p class="mb-4">Your new password must be different from previously used passwords</p>
 
-            <form id="formAuthentication" class="mb-3" action="#" method="POST">
+            <form id="formAccountSettings" class="mb-3" action="#" method="POST">
           
              
               <div class="mb-3 form-password-toggle">
@@ -121,8 +123,14 @@ $roles = get_roles(true);
                 </div>
               </div>
 
+              <input id="token" type="hidden" value="<?= $token; ?>">
+              <input id="id" type="hidden" value="<?= $user_data['id']; ?>">
+              <input id="table" type="hidden" value="<?= $user_data['table']; ?>">
+              <input id="id_field" type="hidden" value="<?= $user_data['id_field']; ?>">
+
+
               <div class="mb-3">
-                <button class="btn btn-primary d-grid w-100" type="button" id="init_login">Set New Password</button>
+                <button class="btn btn-primary d-grid w-100" type="button" id="reset_form">Set New Password</button>
               </div>
 
               <div class="text-center">
@@ -166,37 +174,40 @@ $roles = get_roles(true);
     $(document).ready(function() {
 
       /* ----------------------------- Initiate Login ----------------------------- */
-      $('#init_login').click(function(e) {
+      $('#reset_form').click(function(e) {
         e.preventDefault();
-
         const params = {
           valid: true,
-          role_id: $('#role').val(),
-          mobile: $('#mobile').val(),
-          password: $('#password').val(),
+          token: $('#token').val(),
+          id: $('#id').val(),
+          table: $('#table').val(),
+          id_field: $('#id_field').val(),
+          new_password: $('#new_password').val(),
+          confirm_password: $('#confirm_password').val()
+      
         }
 
-        if (params.role_id === '') {
-          toastr.error('Please Select Valid Role');
+        if (params.new_password === '') {
+          toastr.error('Please Enter New Password');
           params.valid = false;
           return false
         }
 
-        if (params.mobile === '') {
-          toastr.error('Invalid Mobile');
+        if (params.confirm_password === '') {
+          toastr.error('Please Enter Confirm Password');
           params.valid = false;
           return false
         }
 
-        if (params.password === '') {
-          toastr.error('Invalid Password');
-          params.valid = false;
-          return false
+        if(params.new_password !== params.confirm_password){
+            toastr.error('Confirm Password does not match');
+            params.valid = false;
+            return false;
         }
 
         if (params.valid) {
           $.ajax({
-            url: '<?= base_url() ?>Auth/init_login',
+            url: '<?= base_url() ?>Auth/update_password',
             method: 'POST',
             dataType: 'JSON',
             data: params,
@@ -204,6 +215,8 @@ $roles = get_roles(true);
               if (res) {
                 if (res.Resp_code === 'RCS') {
                   toastr.info(res.Resp_desc);
+                  $("#formAccountSettings")[0].reset();
+
                 } else if (res.Resp_code === 'RLD') {
                   window.location.reload(true);
                 } else {
