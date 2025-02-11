@@ -114,31 +114,4 @@
                 }
             });
  
- 
-            /* ----------------------------- Reset Password ----------------------------- */
-
-            $('#reset').click(function(e){
-
-                $.ajax({
-                        url: '<?= base_url() ?>Dashboard/send_reset_link',
-                        method: 'POST',
-                        dataType: 'JSON',
-                       
-                        success: function(res) {
-                            if (res.Resp_code === 'RCS') {
-                                toastr.info(res.Resp_desc)
-                                $("#formAccountSettings")[0].reset();
-
-                                $('#back_to_first_screen').click()
-                                students_table.ajax.reload()
-                            } else if (res.Resp_code === 'RLD') {
-                                window.location.reload();
-                            } else {
-                                toastr.error(res.Resp_desc)
-                            }
-                        }
-                    });
-
-            });
- 
  </script>

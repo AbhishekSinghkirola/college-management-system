@@ -183,7 +183,6 @@ if(!function_exists(('get_student_list'))){
     }
 }
 
-
 /* ---------------- Function to get all data from teacher salary table ---------------- */
 
 if(!function_exists(('get_teacher_list'))){
@@ -209,5 +208,6 @@ function compareByTimeStamp($time1, $time2)
         return 0;
     }
 }
+
 
 
